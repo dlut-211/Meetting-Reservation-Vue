@@ -131,7 +131,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">立即预约</el-button>
-            <el-button>重置</el-button>
+            <el-button>取消</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -187,13 +187,15 @@ export default {
       let a = row.date.split("-");
       console.log(a);
       if (this.timesign == false) {
-        this.form.room = column.label;
+        this.room = column.label;
         this.form.date1 = a[0];
         this.form.date2 = a[1];
         this.timesign=true;
       } else {
-        if (  this.form.room == column.label) {
-       
+        if (this.room == column.label) {
+          if(this.form.date1 > a[0])
+           this.$message.error("如需选择前置时间请重置");
+          else
           this.form.date2 = a[1];
         } else {
           this.$message.error("请选择同一会议室进行预约");

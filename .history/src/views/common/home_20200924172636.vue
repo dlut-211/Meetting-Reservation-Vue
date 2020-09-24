@@ -32,7 +32,7 @@
                   font-weight: 800;
                   line-height: 25px;
                 "
-                >{{ item.capacity }}</el-button
+                >{{ item.capacity }}人</el-button
               >
               <el-button
                 type="text"

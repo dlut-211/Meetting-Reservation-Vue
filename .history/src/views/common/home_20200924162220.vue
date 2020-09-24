@@ -76,15 +76,17 @@
               placeholder="点击左侧进行选择"
             ></el-input>
           </el-form-item>
-          <el-form-item label="活动日期">
+            <el-form-item label="活动日期">
             <el-col :span="11">
-              <el-input v-model="form.datechoose"></el-input>
+              <el-input
+                v-model="form.datechoose"
+              ></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="活动时间">
             <el-col :span="11">
               <el-input
-                readonly
+              readonly
                 placeholder="开始时间"
                 v-model="form.date1"
                 style="width: 100%"
@@ -93,7 +95,7 @@
             <el-col class="line" :span="2" style="text-align: center">-</el-col>
             <el-col :span="11">
               <el-input
-                readonly
+              readonly
                 placeholder="结束时间"
                 v-model="form.date2"
                 style="width: 100%"
@@ -131,7 +133,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">立即预约</el-button>
-            <el-button>重置</el-button>
+            <el-button>取消</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -164,9 +166,6 @@ export default {
           name: data.now_user.email,
           mobile: data.now_user.mobile,
           belong: data.now_user.department,
-          date1: null,
-          date2: null,
-          room: null,
         };
         console.log(this.room);
       } else {
@@ -184,26 +183,21 @@ export default {
         return "border-radius: 15px;background-color:rgb(0, 215, 193);padding:0";
     },
     clickhandle(row, column, event, cell) {
-      let a = row.date.split("-");
+      let a=row.date.split("-");
       console.log(a);
-      if (this.timesign == false) {
-        this.form.room = column.label;
-        this.form.date1 = a[0];
-        this.form.date2 = a[1];
-        this.timesign=true;
-      } else {
-        if (  this.form.room == column.label) {
+        this.form.date1=a[0];
        
-          this.form.date2 = a[1];
-        } else {
-          this.$message.error("请选择同一会议室进行预约");
-        }
+        this.form.date2=a[1];
+        
+      if(this.timesign==false)
+      {
+        console.log(this.timesign);
       }
-      console.log("行");
-
+    
+      
       console.log("列");
       console.log(column);
-      console.log();
+      console.log(column.key);
     },
     // addIconClass({ row, column, rowIndex, columnIndex }) {
     //  if (columnIndex != 0)
@@ -225,8 +219,8 @@ export default {
       tableData: [],
       form: {},
       datevalue: "",
-      timesign: false,
-      timestart: "",
+      timesign:false,
+      timestart:"",
     };
   },
 };
