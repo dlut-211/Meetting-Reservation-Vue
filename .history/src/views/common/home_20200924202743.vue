@@ -28,8 +28,8 @@
                   float: left;
                   font-size: 18px;
                   margin-left: 10%;
-                  color: white;
-               
+                  color: #686868;
+                  font-weight: 800;
                   line-height: 25px;
                 "
                 >{{ item.capacity }}</el-button
@@ -168,6 +168,8 @@ export default {
           date2: null,
           room: null,
         };
+
+        console.log(this.room);
       } else {
         this.$message.error(data.msg);
       }
@@ -179,20 +181,16 @@ export default {
     },
     // 单元格的 style 的回调方法
     cellStyle({ row, column, rowIndex, columnIndex }) {
-      //初始渲染已选择
-      for (let i = 0; i < this.choosetable.length; i++) {
+      // console.log(row);
+      // console.log(column.label);
+      // console.log("qqqqqqqqqqqq");
+      // console.log(column);
+      for (let i = 0; i < this.tableData.length; i++) {
         let a = this.choosetable[i].chose.split("_");
-        if (column.label == a[0] && rowIndex == a[1] - 7) {
-          return "border-radius: 15px;background-color:#909399;color:white;padding:0";
-        }
-      }
 
-      //点击选择
-      console.log(this.timestart);
-      //console.log(rowIndex);
-      if (this.timesign == true) {
-        if (column.label == this.roomsign && rowIndex == this.timestart - 7) {
-          return "border-radius: 15px;background-color:#409EFF;color:white;padding:0";
+        if (column.label == a[0] && rowIndex == a[1] - 6) {
+          console.log(" this.choosetable.length");
+          return "border-radius: 15px;background-color:#444;padding:0";
         }
       }
       if (columnIndex != 0)
@@ -200,15 +198,12 @@ export default {
     },
     clickhandle(row, column, event, cell) {
       let a = row.date.split("-");
-      // console.log(a);
+      console.log(a);
       if (this.timesign == false) {
         this.form.room = column.label;
-        this.roomsign = column.label;
         this.form.date1 = a[0];
-        this.timestart = a[0].split(":")[0];
         this.form.date2 = a[1];
         this.timesign = true;
-        // console.log(this.timestart);
       } else {
         if (this.form.room == column.label) {
           this.form.date2 = a[1];
@@ -242,13 +237,10 @@ export default {
       tableData: [],
       form: {},
       datevalue: "",
+      timesign: false,
       timestart: "",
       datasign: [],
       choosetable: {},
-      timesign: false,
-      timestart: "",
-      timeend: "",
-      roomsign: "",
     };
   },
 };

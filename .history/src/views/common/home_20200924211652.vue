@@ -29,7 +29,7 @@
                   font-size: 18px;
                   margin-left: 10%;
                   color: white;
-               
+                  font-weight: 800;
                   line-height: 25px;
                 "
                 >{{ item.capacity }}</el-button

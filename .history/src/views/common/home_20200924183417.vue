@@ -10,6 +10,7 @@
           class="customer-table"
           :data="tableData"
           :cell-style="cellStyle"
+          :cell-class-name="cellClass"
           border
           @cell-click="clickhandle"
           style="width: 95%"
@@ -28,8 +29,8 @@
                   float: left;
                   font-size: 18px;
                   margin-left: 10%;
-                  color: white;
-               
+                  color: #686868;
+                  font-weight: 800;
                   line-height: 25px;
                 "
                 >{{ item.capacity }}</el-button
@@ -156,7 +157,7 @@ export default {
     }).then(({ data }) => {
       if (data && data.code === 0) {
         console.log(data);
-        this.choosetable = data.choosetable;
+
         this.room = data.room;
         this.tableData = data.list;
         this.form = {
@@ -168,6 +169,7 @@ export default {
           date2: null,
           room: null,
         };
+        console.log(this.room);
       } else {
         this.$message.error(data.msg);
       }
@@ -179,36 +181,26 @@ export default {
     },
     // 单元格的 style 的回调方法
     cellStyle({ row, column, rowIndex, columnIndex }) {
-      //初始渲染已选择
-      for (let i = 0; i < this.choosetable.length; i++) {
-        let a = this.choosetable[i].chose.split("_");
-        if (column.label == a[0] && rowIndex == a[1] - 7) {
-          return "border-radius: 15px;background-color:#909399;color:white;padding:0";
-        }
-      }
+      if (columnIndex != 0) return;
+      else return "border-radius: 15px;background-color:#409EFF";
+    },
+    // 单元格的 Class 的回调方法
+    cellClass({ row, column }) {
+      console.log("++++++++");
+      console.log(row);
+      console.log(column);
+      console.log("++++++++");
 
-      //点击选择
-      console.log(this.timestart);
-      //console.log(rowIndex);
-      if (this.timesign == true) {
-        if (column.label == this.roomsign && rowIndex == this.timestart - 7) {
-          return "border-radius: 15px;background-color:#409EFF;color:white;padding:0";
-        }
-      }
-      if (columnIndex != 0)
-        return "border-radius: 15px;background-color:rgb(0, 215, 193);padding:0";
+      return "cell-class-free";
     },
     clickhandle(row, column, event, cell) {
       let a = row.date.split("-");
-      // console.log(a);
+      console.log(a);
       if (this.timesign == false) {
         this.form.room = column.label;
-        this.roomsign = column.label;
         this.form.date1 = a[0];
-        this.timestart = a[0].split(":")[0];
         this.form.date2 = a[1];
         this.timesign = true;
-        // console.log(this.timestart);
       } else {
         if (this.form.room == column.label) {
           this.form.date2 = a[1];
@@ -216,12 +208,13 @@ export default {
           this.$message.error("请选择同一会议室进行预约");
         }
       }
-      // console.log("行");
+      console.log("行");
 
-      // console.log("列");
-      // console.log(column);
-      // console.log();
+      console.log("列");
+      console.log(column);
+      console.log();
     },
+
     // addIconClass({ row, column, rowIndex, columnIndex }) {
     //  if (columnIndex != 0)
     //       return "iconfont icon-mic icon-shexiangtou_guanbi";
@@ -242,18 +235,21 @@ export default {
       tableData: [],
       form: {},
       datevalue: "",
-      timestart: "",
-      datasign: [],
-      choosetable: {},
       timesign: false,
       timestart: "",
-      timeend: "",
-      roomsign: "",
     };
   },
 };
 </script>
 
+
+<style>
+.cell-class-free {
+  border-radius: 15px;
+  background-color: rgb(0, 215, 193);
+  padding: 0;
+}
+</style>
 
 <style>
 .el-table--border,

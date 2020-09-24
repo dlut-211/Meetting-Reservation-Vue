@@ -28,8 +28,8 @@
                   float: left;
                   font-size: 18px;
                   margin-left: 10%;
-                  color: white;
-               
+                  color: #686868;
+                  font-weight: 800;
                   line-height: 25px;
                 "
                 >{{ item.capacity }}</el-button
@@ -182,7 +182,7 @@ export default {
       //初始渲染已选择
       for (let i = 0; i < this.choosetable.length; i++) {
         let a = this.choosetable[i].chose.split("_");
-        if (column.label == a[0] && rowIndex == a[1] - 7) {
+        if (column.label == a[0] && rowIndex == a[1] - 6) {
           return "border-radius: 15px;background-color:#909399;color:white;padding:0";
         }
       }
@@ -191,7 +191,7 @@ export default {
       console.log(this.timestart);
       //console.log(rowIndex);
       if (this.timesign == true) {
-        if (column.label == this.roomsign && rowIndex == this.timestart - 7) {
+        if (column.label == this.roomsign && rowIndex == this.timestart - 6) {
           return "border-radius: 15px;background-color:#409EFF;color:white;padding:0";
         }
       }
