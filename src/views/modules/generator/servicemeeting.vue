@@ -13,9 +13,11 @@
     <el-table
       :data="dataList"
       border
+      stripe="true"
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
-      style="width: 100%;">
+      style="width: 100%;"
+      max-height="500">
       <el-table-column
         type="selection"
         header-align="center"
@@ -26,25 +28,34 @@
         prop="orderId"
         header-align="center"
         align="center"
-        label="唯一标识">
+        label="楼宇信息">
       </el-table-column>
       <el-table-column
         prop="department"
         header-align="center"
         align="center"
-        label="使用单位（例:软件学院）">
-      </el-table-column>
-      <el-table-column
-        prop="roomUser"
-        header-align="center"
-        align="center"
-        label="会议室预约人">
+        label="使用单位">
       </el-table-column>
       <el-table-column
         prop="roomName"
         header-align="center"
         align="center"
-        label="会议室名称">
+        label="会议室"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="roomUser"
+        header-align="center"
+        align="center"
+        label="预约人"
+        width="70">
+      </el-table-column>
+      <el-table-column
+        prop="roomDate"
+        header-align="center"
+        align="center"
+        label="会议日期"
+        width="100">
       </el-table-column>
       <el-table-column
         prop="startTime"
@@ -59,40 +70,49 @@
         label="会议结束时间">
       </el-table-column>
       <el-table-column
-        prop="headCount"
+        prop="meetingTheme"
         header-align="center"
         align="center"
-        label="参数人数">
+        label="会议主题"
+        width="200">
       </el-table-column>
       <el-table-column
         prop="leader"
         header-align="center"
         align="center"
-        label="参会领导">
+        label="参会校领导"
+        width="100">
       </el-table-column>
       <el-table-column
-        prop="meetingTheme"
+        prop="headCount"
         header-align="center"
         align="center"
-        label="会议主题">
+        label="参会人数">
+      </el-table-column>
+      <el-table-column
+        prop="equipment"
+        header-align="center"
+        align="center"
+        label="会场准备">
       </el-table-column>
       <el-table-column
         prop="remark"
         header-align="center"
         align="center"
-        label="备注">
+        label="备注"
+        width="50">
       </el-table-column>
       <el-table-column
         prop="status"
         header-align="center"
         align="center"
-        label="预约状态（0:审核中 1，通过，2：未通过，3:已取消）">
+        label="预约状态">
       </el-table-column>
       <el-table-column
         fixed="right"
         header-align="center"
         align="center"
-        width="150"
+        width="50"
         label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.orderId)">修改</el-button>
@@ -100,6 +120,7 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页处理 -->
     <el-pagination
       @size-change="sizeChangeHandle"
       @current-change="currentChangeHandle"
@@ -122,7 +143,156 @@
         dataForm: {
           key: ''
         },
-        dataList: [],
+        dataList: [{
+          orderId:'1',
+          department:'软件学院',
+          roomName:'四楼会议室412',
+          roomUser:'方轶',
+          roomDate:'2020-10-01',
+          startTime:'10:00',
+          endTime:'11:00',
+          meetingTheme:'华为公司合作交流会',
+          leader:'罗钟铉',
+          headCount:'15',
+          equipment:'投影仪',
+          remark:'无',
+          status:'通过'
+        },
+        {
+          orderId:'2',
+          department:'软件学院',
+          roomName:'四楼会议室412',
+          roomUser:'方轶',
+          roomDate:'2020-10-01',
+          startTime:'10:00',
+          endTime:'11:00',
+          meetingTheme:'华为公司合作交流会',
+          leader:'罗钟铉',
+          headCount:'15',
+          equipment:'投影仪',
+          remark:'无',
+          status:'通过'
+        },
+        {
+          orderId:'3',
+          department:'软件学院',
+          roomName:'四楼会议室412',
+          roomUser:'方轶',
+          roomDate:'2020-10-01',
+          startTime:'10:00',
+          endTime:'11:00',
+          meetingTheme:'华为公司合作交流会',
+          leader:'罗钟铉',
+          headCount:'15',
+          equipment:'投影仪',
+          remark:'无',
+          status:'通过'
+        },
+        {
+          orderId:'4',
+          department:'软件学院',
+          roomName:'四楼会议室412',
+          roomUser:'方轶',
+          roomDate:'2020-10-01',
+          startTime:'10:00',
+          endTime:'11:00',
+          meetingTheme:'华为公司合作交流会',
+          leader:'罗钟铉',
+          headCount:'15',
+          equipment:'投影仪',
+          remark:'无',
+          status:'通过'
+        },
+        {
+          orderId:'5',
+          department:'软件学院',
+          roomName:'四楼会议室412',
+          roomUser:'方轶',
+          roomDate:'2020-10-01',
+          startTime:'10:00',
+          endTime:'11:00',
+          meetingTheme:'华为公司合作交流会',
+          leader:'罗钟铉',
+          headCount:'15',
+          equipment:'投影仪',
+          remark:'无',
+          status:'通过'
+        },
+        {
+          orderId:'6',
+          department:'软件学院',
+          roomName:'四楼会议室412',
+          roomUser:'方轶',
+          roomDate:'2020-10-01',
+          startTime:'10:00',
+          endTime:'11:00',
+          meetingTheme:'华为公司合作交流会',
+          leader:'罗钟铉',
+          headCount:'15',
+          equipment:'投影仪',
+          remark:'无',
+          status:'通过'
+        },
+        {
+          orderId:'7',
+          department:'软件学院',
+          roomName:'四楼会议室412',
+          roomUser:'方轶',
+          roomDate:'2020-10-01',
+          startTime:'10:00',
+          endTime:'11:00',
+          meetingTheme:'华为公司合作交流会',
+          leader:'罗钟铉',
+          headCount:'15',
+          equipment:'投影仪',
+          remark:'无',
+          status:'通过'
+        },
+        {
+          orderId:'8',
+          department:'软件学院',
+          roomName:'四楼会议室412',
+          roomUser:'方轶',
+          roomDate:'2020-10-01',
+          startTime:'10:00',
+          endTime:'11:00',
+          meetingTheme:'华为公司合作交流会',
+          leader:'罗钟铉',
+          headCount:'15',
+          equipment:'投影仪',
+          remark:'无',
+          status:'通过'
+        },
+        {
+          orderId:'9',
+          department:'软件学院',
+          roomName:'四楼会议室412',
+          roomUser:'方轶',
+          roomDate:'2020-10-01',
+          startTime:'10:00',
+          endTime:'11:00',
+          meetingTheme:'华为公司合作交流会',
+          leader:'罗钟铉',
+          headCount:'15',
+          equipment:'投影仪',
+          remark:'无',
+          status:'通过'
+        },
+        {
+          orderId:'10',
+          department:'软件学院',
+          roomName:'四楼会议室412',
+          roomUser:'方轶',
+          roomDate:'2020-10-01',
+          startTime:'10:00',
+          endTime:'11:00',
+          meetingTheme:'华为公司合作交流会',
+          leader:'罗钟铉',
+          headCount:'15',
+          equipment:'投影仪',
+          remark:'无',
+          status:'通过'
+        }],
         pageIndex: 1,
         pageSize: 10,
         totalPage: 0,
