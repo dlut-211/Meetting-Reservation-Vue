@@ -14,7 +14,7 @@
           @cell-click="clickhandle"
           style="width: 95%"
         >
-          <el-table-column prop="date" width="120"> </el-table-column>
+          <el-table-column prop="date"> </el-table-column>
           <el-table-column
             v-for="(item, index) in room"
             :key="index"

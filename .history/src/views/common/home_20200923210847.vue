@@ -4,17 +4,15 @@
   <div>
     <el-row>
       <el-col :span="16">
-        <el-date-picker v-model="datevalue" type="date" placeholder="选择日期">
-        </el-date-picker>
         <el-table
           class="customer-table"
           :data="tableData"
           :cell-style="cellStyle"
           border
           @cell-click="clickhandle"
-          style="width: 95%"
+          style="width: 90%"
         >
-          <el-table-column prop="date" width="120"> </el-table-column>
+          <el-table-column prop="date" label="2020/9/21"></el-table-column>
           <el-table-column
             v-for="(item, index) in room"
             :key="index"
@@ -24,16 +22,14 @@
             <template slot-scope="scope">
               <el-button
                 type="text"
+                class="iconfont icon-mic"
                 style="
                   float: left;
-                  font-size: 18px;
+                  font-size: 25px;
                   margin-left: 10%;
                   color: #686868;
-                  font-weight: 800;
-                  line-height: 25px;
                 "
-                >{{ item.capacity }}</el-button
-              >
+              ></el-button>
               <el-button
                 type="text"
                 class="iconfont icon-shexiangtou_guanbi"
@@ -53,7 +49,10 @@
       <el-col :span="8">
         <el-form ref="form" :model="form" label-width="80px">
           <el-form-item label="使用单位">
-            <el-input v-model="form.department" readonly></el-input>
+            <el-select v-model="form.department" placeholder="请选择使用单位">
+              <el-option label="软件学院" value="1"></el-option>
+              <el-option label="微电子学院" value="2"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="联系人">
             <el-input v-model="form.name" readonly></el-input>
@@ -76,17 +75,9 @@
               placeholder="点击左侧进行选择"
             ></el-input>
           </el-form-item>
-            <el-form-item label="参会人数">
-            <el-col :span="11">
-              <el-input
-                v-model="form.datechoose"
-              ></el-input>
-            </el-col>
-          </el-form-item>
           <el-form-item label="活动时间">
             <el-col :span="11">
               <el-input
-              readonly
                 placeholder="开始时间"
                 v-model="form.date1"
                 style="width: 100%"
@@ -95,7 +86,6 @@
             <el-col class="line" :span="2" style="text-align: center">-</el-col>
             <el-col :span="11">
               <el-input
-              readonly
                 placeholder="结束时间"
                 v-model="form.date2"
                 style="width: 100%"
@@ -158,14 +148,19 @@ export default {
     }).then(({ data }) => {
       if (data && data.code === 0) {
         console.log(data);
-
         this.room = data.room;
-        this.tableData = data.list;
         this.form = {
-          department: data.room[1].roomArea,
+          // department: "",
           name: data.now_user.email,
           mobile: data.now_user.mobile,
           belong: data.now_user.department,
+          // room:"",
+          // date1: "",
+          // date2: "",
+          // leader: "",
+          // sum: null,
+          // theme: [],
+          // note: "",
         };
         console.log(this.room);
       } else {
@@ -183,17 +178,12 @@ export default {
         return "border-radius: 15px;background-color:rgb(0, 215, 193);padding:0";
     },
     clickhandle(row, column, event, cell) {
-      let a=row.date.split("-");
-      if(this.timesign==false)
-      {
-        this.form.date1=a[0];
-        this.form.date2=a[0];
-      }
-      console.log("行");
       console.log(row);
-      console.log("列");
+        console.log("row");
       console.log(column);
-      console.log(column.key);
+      console.log(event);
+      console.log(cell);
+      console.log(row[3]);
     },
     // addIconClass({ row, column, rowIndex, columnIndex }) {
     //  if (columnIndex != 0)
@@ -212,11 +202,97 @@ export default {
   data() {
     return {
       room: [],
-      tableData: [],
+      tableData: [
+        {
+          date: "7:00-8:00",
+          1: 1,
+          2: 1,
+          3: 1,
+          4: 1,
+          5: 1,
+          6: 1,
+          7: 1,
+          8: 1,
+        },
+        {
+          date: "8:00-9:00",
+          1: 2,
+          2: 2,
+          3: 2,
+          4: 2,
+          5: 2,
+          6: 2,
+          7: 2,
+          8: 2,
+        },
+        {
+          date: "8:00-9:00",
+          1: 2,
+          2: 2,
+          3: 2,
+          4: 2,
+          5: 2,
+          6: 2,
+          7: 2,
+          8: 2,
+        },
+        {
+          date: "8:00-9:00",
+          1: 2,
+          2: 2,
+          3: 2,
+          4: 2,
+          5: 2,
+          6: 2,
+          7: 2,
+          8: 2,
+        },
+        {
+          date: "8:00-9:00",
+          1: 2,
+          2: 2,
+          3: 2,
+          4: 2,
+          5: 2,
+          6: 2,
+          7: 2,
+          8: 2,
+        },
+        {
+          date: "8:00-9:00",
+          1: 2,
+          2: 2,
+          3: 2,
+          4: 2,
+          5: 2,
+          6: 2,
+          7: 2,
+          8: 2,
+        },
+        {
+          date: "8:00-9:00",
+          1: 2,
+          2: 2,
+          3: 2,
+          4: 2,
+          5: 2,
+          6: 2,
+          7: 2,
+          8: 2,
+        },
+        {
+          date: "8:00-9:00",
+          1: 2,
+          2: 2,
+          3: 2,
+          4: 2,
+          5: 2,
+          6: 2,
+          7: 2,
+          8: 2,
+        },
+      ],
       form: {},
-      datevalue: "",
-      timesign:false,
-      timestart:"",
     };
   },
 };

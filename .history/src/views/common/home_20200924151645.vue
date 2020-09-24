@@ -14,7 +14,7 @@
           @cell-click="clickhandle"
           style="width: 95%"
         >
-          <el-table-column prop="date" width="120"> </el-table-column>
+          <el-table-column prop="date"> </el-table-column>
           <el-table-column
             v-for="(item, index) in room"
             :key="index"
@@ -76,17 +76,9 @@
               placeholder="点击左侧进行选择"
             ></el-input>
           </el-form-item>
-            <el-form-item label="参会人数">
-            <el-col :span="11">
-              <el-input
-                v-model="form.datechoose"
-              ></el-input>
-            </el-col>
-          </el-form-item>
           <el-form-item label="活动时间">
             <el-col :span="11">
               <el-input
-              readonly
                 placeholder="开始时间"
                 v-model="form.date1"
                 style="width: 100%"
@@ -95,7 +87,6 @@
             <el-col class="line" :span="2" style="text-align: center">-</el-col>
             <el-col :span="11">
               <el-input
-              readonly
                 placeholder="结束时间"
                 v-model="form.date2"
                 style="width: 100%"
@@ -162,7 +153,7 @@ export default {
         this.room = data.room;
         this.tableData = data.list;
         this.form = {
-          department: data.room[1].roomArea,
+          department: data.room.roomArea,
           name: data.now_user.email,
           mobile: data.now_user.mobile,
           belong: data.now_user.department,
@@ -183,12 +174,6 @@ export default {
         return "border-radius: 15px;background-color:rgb(0, 215, 193);padding:0";
     },
     clickhandle(row, column, event, cell) {
-      let a=row.date.split("-");
-      if(this.timesign==false)
-      {
-        this.form.date1=a[0];
-        this.form.date2=a[0];
-      }
       console.log("行");
       console.log(row);
       console.log("列");
@@ -215,8 +200,6 @@ export default {
       tableData: [],
       form: {},
       datevalue: "",
-      timesign:false,
-      timestart:"",
     };
   },
 };
