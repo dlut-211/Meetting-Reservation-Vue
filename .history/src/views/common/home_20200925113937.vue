@@ -266,10 +266,10 @@ export default {
                 console.log("c[1]" + i);
               console.log(c[1]);
               console.log(this.timestart);
-              console.log(a[0].split(":")[0]);
+              console.log(this.timeend);
               if (
                 Number(c[1]) > Number(this.timestart) &&
-                Number(c[1]) < Number(a[0].split(":")[0])
+                Number(c[1]) < Number(a[0])
               ) {
                 this.$message.error("当前时间段已有被预约时间段");
                 console.log("before" + i);

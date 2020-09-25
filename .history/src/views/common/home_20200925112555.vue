@@ -177,20 +177,22 @@ export default {
     onSubmit() {
       console.log("submit!");
     },
-    context() {
-      console.log("当前各项值");
+    context(){
+    console.log("当前各项值");
       console.log("this.timesign");
-      console.log(this.timesign);
+         console.log(this.timesign);
       console.log("this.timestart");
-      console.log(this.timestart);
+       console.log(this.timestart);
       console.log("this.timeend");
-      console.log(this.timeend);
-      console.log("this.roomsign");
+        console.log(this.timeend);
+        console.log("this.roomsign");
       console.log(this.roomsign);
-      console.log("this.bechosed");
+            console.log("this.bechosed");
       console.log(this.bechosed);
+
     },
     resetchose() {
+  
       this.timesign = false;
       this.timestart = "";
       this.timeend = "";
@@ -206,11 +208,7 @@ export default {
       //初始渲染已选择
       for (let i = 0; i < this.choosetable.length; i++) {
         let a = this.choosetable[i].chose.split("_");
-        if (
-          column.label == a[0] &&
-          rowIndex >= a[1] - 7 &&
-          rowIndex <= a[2] - 8
-        ) {
+        if (column.label == a[0] && rowIndex >= a[1] - 7&&rowIndex <= a[2] - 8) {
           return "border-radius: 15px;background-color:#909399;color:white;padding:0";
         }
       }
@@ -218,26 +216,23 @@ export default {
       //点击选择
       console.log(this.timestart);
       //console.log(rowIndex);
-      if (columnIndex != 0 && this.timesign == true) {
+      if (columnIndex != 0&&this.timesign == true) {
         this.context();
         if (
           this.timeend != "" &&
           column.label == this.roomsign &&
-          rowIndex >= Number(this.timestart - 7) &&
-          rowIndex <= Number(this.timeend - 8) &&
+          rowIndex >= this.timestart - 7 &&
+          rowIndex <= this.timeend - 8 &&
           this.bechosed == true
         ) {
           console.log("进入if");
-          this.context();
+            this.context();
           return "border-radius: 15px;background-color:#409EFF;color:white;padding:0";
         }
 
-        if (
-          column.label == this.roomsign &&
-          rowIndex == Number(this.timestart - 7)
-        ) {
-          console.log("进入else");
-          this.context();
+        if (column.label == this.roomsign && rowIndex == this.timestart - 7) {
+           console.log("进入else");
+            this.context();
           return "border-radius: 15px;background-color:#409EFF;color:white;padding:0";
         }
       }
@@ -246,48 +241,44 @@ export default {
     },
     clickhandle(row, column, event, cell) {
       let a = row.date.split("-");
-      console.log("点击事件");
-      console.log(this.timesign);
+          console.log("点击事件");
+           console.log(this.timesign);
       if (this.timesign == false) {
         this.form.room = column.label;
         this.roomsign = column.label;
         this.form.date1 = a[0];
         this.timestart = a[0].split(":")[0];
-        this.timeend = "";
+         this.timeend ="";
         this.form.date2 = a[1];
         this.timesign = true;
-        this.context();
+this.context();
         // console.log(this.timestart);
       } else {
         if (this.form.room == column.label) {
           for (let i = 0; i < this.choosetable.length; i++) {
             let c = this.choosetable[i].chose.split("_");
             if (c[0] == column.label) {
-                console.log("c[1]" + i);
               console.log(c[1]);
               console.log(this.timestart);
-              console.log(a[0].split(":")[0]);
-              if (
-                Number(c[1]) > Number(this.timestart) &&
-                Number(c[1]) < Number(a[0].split(":")[0])
-              ) {
+              console.log(this.timeend);
+              if (c[1] > this.timestart && c[1] < a[0]) {
                 this.$message.error("当前时间段已有被预约时间段");
-                console.log("before" + i);
-                this.context();
+                console.log("before"+i);
+                  this.context();
                 this.resetchose();
-                console.log("after" + i);
-                this.context();
+                console.log("after"+i);
+                  this.context();
                 break;
               }
             }
           }
 
-          if (Number(a[0].split(":")[0]) <= Number(this.timestart)) {
-            console.log("请选择正确的时间段");
+          if (a[0].split(":")[0] <= this.timestart) {
             console.log(a[0].split(":")[0]);
-            this.context();
+            console.log(this.timestart);
             this.$message.error("请选择正确的时间段");
             this.resetchose();
+          
           } else {
             this.form.date2 = a[1];
             this.timeend = a[1].split(":")[0];
