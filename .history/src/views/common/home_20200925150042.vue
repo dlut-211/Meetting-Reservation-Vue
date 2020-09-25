@@ -7,16 +7,16 @@
         <el-date-picker
           v-model="datevalue"
           type="date"
-          @change="getTanleMsg"
+          :picker-options="expireTimeOption"
           placeholder="选择日期"
-          value-format="yyyy-MM-dd"
+          @change="getTaleMsg"
         >
-          <!-- :picker-options="expireTimeOption" -->
         </el-date-picker>
         <el-table
           class="customer-table"
           :data="tableData"
           :cell-style="cellStyle"
+          value-format="yyyy-MM-dd"
           border
           @cell-click="clickhandle"
           style="width: 95%"
@@ -152,16 +152,16 @@ export default {
     this.getNowTime();
   },
   mounted() {
-    this.getTanleMsg();
+    this.getTaleMsg();
   },
   methods: {
-    getTanleMsg() {
+    getTaleMsg() {
       this.$http({
         url: this.$http.adornUrl("/generator/servicemeeting/formuser"),
         method: "post",
 
         data: {
-          value: this.datevalue,
+          date: this.datevalue,
         },
         // 设置请求头
         headers: {
@@ -214,8 +214,8 @@ export default {
       month = month + 1;
       month = month.toString().padStart(2, "0");
       date = date.toString().padStart(2, "0");
-      var defaultDate = `${year}-${month}-${date}`;
-      // var defaultDate = '2020-09-24';
+      // var defaultDate = `${year}-${month}-${date}`;
+      var defaultDate = "2020-9-24";
       this.datevalue = defaultDate;
     },
 
@@ -362,12 +362,12 @@ export default {
       timeend: "",
       roomsign: "",
       bechosed: false,
-      // expireTimeOption: {
-      //   disabledDate(date) {
-      //     // 当天可选：
-      //     return date.getTime() < Date.now() - 24 * 60 * 60 * 1000;
-      //   },
-      // },
+      expireTimeOption: {
+        disabledDate(date) {
+          // 当天可选：
+          return date.getTime() < Date.now() - 24 * 60 * 60 * 1000;
+        },
+      },
     };
   },
 };

@@ -7,16 +7,15 @@
         <el-date-picker
           v-model="datevalue"
           type="date"
-          @change="getTanleMsg"
+          :picker-options="expireTimeOption"
           placeholder="选择日期"
-          value-format="yyyy-MM-dd"
         >
-          <!-- :picker-options="expireTimeOption" -->
         </el-date-picker>
         <el-table
           class="customer-table"
           :data="tableData"
           :cell-style="cellStyle"
+          value-format="yyyy-MM-dd"
           border
           @cell-click="clickhandle"
           style="width: 95%"
@@ -148,48 +147,42 @@
 
   <script>
 export default {
-  created() {
-    this.getNowTime();
-  },
   mounted() {
-    this.getTanleMsg();
+    this.$http({
+      url: this.$http.adornUrl("/generator/servicemeeting/formuser"),
+      method: "get",
+      // 请求体重发送的数据
+      // data: {
+
+      // },
+      // 设置请求头
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(({ data }) => {
+      if (data && data.code === 0) {
+        console.log(data);
+        this.choosetable = data.choosetable;
+        this.room = data.room;
+        this.tableData = data.list;
+        this.getNowTime();
+        console.log();
+        this.form = {
+          department: data.room[1].roomArea,
+          name: data.now_user.email,
+          mobile: data.now_user.mobile,
+          belong: data.now_user.department,
+          datechoose: this.datevalue,
+          date1: null,
+          date2: null,
+          room: null,
+        };
+      } else {
+        this.$message.error(data.msg);
+      }
+    });
   },
   methods: {
-    getTanleMsg() {
-      this.$http({
-        url: this.$http.adornUrl("/generator/servicemeeting/formuser"),
-        method: "post",
-
-        data: {
-          value: this.datevalue,
-        },
-        // 设置请求头
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then(({ data }) => {
-        if (data && data.code === 0) {
-          console.log(data);
-          this.choosetable = data.choosetable;
-          this.room = data.room;
-          this.tableData = data.list;
-
-          console.log();
-          this.form = {
-            department: data.room[1].roomArea,
-            name: data.now_user.email,
-            mobile: data.now_user.mobile,
-            belong: data.now_user.department,
-            datechoose: this.datevalue,
-            date1: null,
-            date2: null,
-            room: null,
-          };
-        } else {
-          this.$message.error(data.msg);
-        }
-      });
-    },
     onSubmit() {
       console.log("submit!");
     },
@@ -215,7 +208,6 @@ export default {
       month = month.toString().padStart(2, "0");
       date = date.toString().padStart(2, "0");
       var defaultDate = `${year}-${month}-${date}`;
-      // var defaultDate = '2020-09-24';
       this.datevalue = defaultDate;
     },
 
@@ -362,12 +354,13 @@ export default {
       timeend: "",
       roomsign: "",
       bechosed: false,
-      // expireTimeOption: {
-      //   disabledDate(date) {
-      //     // 当天可选：
-      //     return date.getTime() < Date.now() - 24 * 60 * 60 * 1000;
-      //   },
-      // },
+      expireTimeOption: {
+  disabledDate(date) {
+    // 当天可选：
+    date.getTime() < Date.now() - 24 * 60 * 60 * 1000
+    return date.getTime() < Date.now()
+  }
+}
     };
   },
 };

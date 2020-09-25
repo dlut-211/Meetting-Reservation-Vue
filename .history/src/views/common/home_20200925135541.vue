@@ -4,19 +4,13 @@
   <div>
     <el-row>
       <el-col :span="16">
-        <el-date-picker
-          v-model="datevalue"
-          type="date"
-          @change="getTanleMsg"
-          placeholder="选择日期"
-          value-format="yyyy-MM-dd"
-        >
-          <!-- :picker-options="expireTimeOption" -->
+        <el-date-picker v-model="datevalue" type="date" placeholder="选择日期">
         </el-date-picker>
         <el-table
           class="customer-table"
           :data="tableData"
           :cell-style="cellStyle"
+            value-format="yyyy-MM-dd"
           border
           @cell-click="clickhandle"
           style="width: 95%"
@@ -148,48 +142,40 @@
 
   <script>
 export default {
-  created() {
-    this.getNowTime();
-  },
   mounted() {
-    this.getTanleMsg();
+    this.$http({
+      url: this.$http.adornUrl("/generator/servicemeeting/formuser"),
+      method: "get",
+      // 请求体重发送的数据
+      // data: {
+
+      // },
+      // 设置请求头
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(({ data }) => {
+      if (data && data.code === 0) {
+        console.log(data);
+        this.choosetable = data.choosetable;
+        this.room = data.room;
+        this.tableData = data.list;
+        this.datevalue=this.getNowTime();
+        this.form = {
+          department: data.room[1].roomArea,
+          name: data.now_user.email,
+          mobile: data.now_user.mobile,
+          belong: data.now_user.department,
+          date1: null,
+          date2: null,
+          room: null,
+        };
+      } else {
+        this.$message.error(data.msg);
+      }
+    });
   },
   methods: {
-    getTanleMsg() {
-      this.$http({
-        url: this.$http.adornUrl("/generator/servicemeeting/formuser"),
-        method: "post",
-
-        data: {
-          value: this.datevalue,
-        },
-        // 设置请求头
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then(({ data }) => {
-        if (data && data.code === 0) {
-          console.log(data);
-          this.choosetable = data.choosetable;
-          this.room = data.room;
-          this.tableData = data.list;
-
-          console.log();
-          this.form = {
-            department: data.room[1].roomArea,
-            name: data.now_user.email,
-            mobile: data.now_user.mobile,
-            belong: data.now_user.department,
-            datechoose: this.datevalue,
-            date1: null,
-            date2: null,
-            room: null,
-          };
-        } else {
-          this.$message.error(data.msg);
-        }
-      });
-    },
     onSubmit() {
       console.log("submit!");
     },
@@ -206,19 +192,17 @@ export default {
       console.log("this.bechosed");
       console.log(this.bechosed);
     },
-    getNowTime() {
-      var now = new Date();
-      var year = now.getFullYear(); //得到年份
-      var month = now.getMonth(); //得到月份
-      var date = now.getDate(); //得到日期
-      month = month + 1;
-      month = month.toString().padStart(2, "0");
-      date = date.toString().padStart(2, "0");
-      var defaultDate = `${year}-${month}-${date}`;
-      // var defaultDate = '2020-09-24';
-      this.datevalue = defaultDate;
-    },
-
+     getNowTime() {
+       var now = new Date();
+       var year = now.getFullYear(); //得到年份
+       var month = now.getMonth(); //得到月份
+       var date = now.getDate(); //得到日期
+       month = month + 1;
+       month = month.toString().padStart(2, "0");
+       date = date.toString().padStart(2, "0");
+       var defaultDate = `${year}-${month}-${date}`;
+       this.$set(this.datevalue, "date", defaultDate);
+   },
     resetchose() {
       this.timesign = false;
       this.timestart = "";
@@ -292,7 +276,7 @@ export default {
           for (let i = 0; i < this.choosetable.length; i++) {
             let c = this.choosetable[i].chose.split("_");
             if (c[0] == column.label) {
-              console.log("c[1]" + i);
+                console.log("c[1]" + i);
               console.log(c[1]);
               console.log(this.timestart);
               console.log(a[0].split(":")[0]);
@@ -333,6 +317,7 @@ export default {
       // console.log("列");
       // console.log(column);
       // console.log();
+
     },
     // addIconClass({ row, column, rowIndex, columnIndex }) {
     //  if (columnIndex != 0)
@@ -362,12 +347,7 @@ export default {
       timeend: "",
       roomsign: "",
       bechosed: false,
-      // expireTimeOption: {
-      //   disabledDate(date) {
-      //     // 当天可选：
-      //     return date.getTime() < Date.now() - 24 * 60 * 60 * 1000;
-      //   },
-      // },
+
     };
   },
 };
