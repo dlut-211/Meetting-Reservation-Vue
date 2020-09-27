@@ -298,13 +298,11 @@ export default {
           this.resetchose();
         }
       }
-
       // console.log("行");
 
       // console.log("列");
       // console.log(column);
       // console.log();
-
     },
     // addIconClass({ row, column, rowIndex, columnIndex }) {
     //  if (columnIndex != 0)

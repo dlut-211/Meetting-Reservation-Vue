@@ -22,19 +22,12 @@
     <el-table
       :data="dataList"
       border
-      stripe="true"
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
       style="width: 100%;"
-
-      height="450">
-      <el-table-column
-        type="selection"
-        header-align="center"
-        align="center"
-        width="50">
-      </el-table-column>
-      <el-table-column
+    >
+      <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
+      <!-- <el-table-column
         prop="roomId"
         header-align="center"
         align="center"

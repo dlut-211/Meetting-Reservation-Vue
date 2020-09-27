@@ -14,12 +14,12 @@
           @cell-click="clickhandle"
           style="width: 95%"
         >
-          <el-table-column prop="date" min-width="110"> </el-table-column>
+          <el-table-column prop="date"> </el-table-column>
           <el-table-column
             v-for="(item, index) in room"
             :key="index"
             :label="item.roomName"
-            width="100"
+            width="110"
           >
             <template slot-scope="scope">
               <el-button
@@ -28,8 +28,8 @@
                   float: left;
                   font-size: 18px;
                   margin-left: 10%;
-                  color: white;
-
+                  color: #686868;
+                  font-weight: 800;
                   line-height: 25px;
                 "
                 >{{ item.capacity }}</el-button
@@ -52,6 +52,7 @@
       </el-col>
       <el-col :span="8">
         <el-form ref="form" :model="form" label-width="80px">
+         
           <el-form-item label="使用单位">
             <el-input v-model="form.department" readonly></el-input>
           </el-form-item>
@@ -76,15 +77,9 @@
               placeholder="点击左侧进行选择"
             ></el-input>
           </el-form-item>
-          <el-form-item label="活动日期">
-            <el-col :span="11">
-              <el-input v-model="form.datechoose"></el-input>
-            </el-col>
-          </el-form-item>
           <el-form-item label="活动时间">
             <el-col :span="11">
               <el-input
-                readonly
                 placeholder="开始时间"
                 v-model="form.date1"
                 style="width: 100%"
@@ -93,7 +88,6 @@
             <el-col class="line" :span="2" style="text-align: center">-</el-col>
             <el-col :span="11">
               <el-input
-                readonly
                 placeholder="结束时间"
                 v-model="form.date2"
                 style="width: 100%"
@@ -131,7 +125,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">立即预约</el-button>
-            <el-button @click="reset">重置</el-button>
+            <el-button>取消</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -156,18 +150,15 @@ export default {
     }).then(({ data }) => {
       if (data && data.code === 0) {
         console.log(data);
-        this.choosetable = data.choosetable;
         this.room = data.room;
         this.tableData = data.list;
         this.form = {
-          department: data.room[1].roomArea,
+          department: data.room.roomArea,
           name: data.now_user.email,
           mobile: data.now_user.mobile,
           belong: data.now_user.department,
-          date1: null,
-          date2: null,
-          room: null,
         };
+        console.log(this.room);
       } else {
         this.$message.error(data.msg);
       }
@@ -177,134 +168,17 @@ export default {
     onSubmit() {
       console.log("submit!");
     },
-    context() {
-      console.log("当前各项值");
-      console.log("this.timesign");
-      console.log(this.timesign);
-      console.log("this.timestart");
-      console.log(this.timestart);
-      console.log("this.timeend");
-      console.log(this.timeend);
-      console.log("this.roomsign");
-      console.log(this.roomsign);
-      console.log("this.bechosed");
-      console.log(this.bechosed);
-    },
-    resetchose() {
-      this.timesign = false;
-      this.timestart = "";
-      this.timeend = "";
-      this.roomsign = "";
-      this.bechosed = false;
-    },
-    reset() {
-      console.log("重置时间");
-      this.$router.go(0);
-    },
     // 单元格的 style 的回调方法
     cellStyle({ row, column, rowIndex, columnIndex }) {
-      //初始渲染已选择
-      for (let i = 0; i < this.choosetable.length; i++) {
-        let a = this.choosetable[i].chose.split("_");
-        if (
-          column.label == a[0] &&
-          rowIndex >= a[1] - 7 &&
-          rowIndex <= a[2] - 8
-        ) {
-          return "border-radius: 15px;background-color:#909399;color:white;padding:0";
-        }
-      }
-
-      //点击选择
-      console.log(this.timestart);
-      //console.log(rowIndex);
-      if (columnIndex != 0 && this.timesign == true) {
-        this.context();
-        if (
-          this.timeend != "" &&
-          column.label == this.roomsign &&
-          rowIndex >= Number(this.timestart - 7) &&
-          rowIndex <= Number(this.timeend - 8) &&
-          this.bechosed == true
-        ) {
-          console.log("进入if");
-          this.context();
-          return "border-radius: 15px;background-color:#409EFF;color:white;padding:0";
-        }
-
-        if (
-          column.label == this.roomsign &&
-          rowIndex == Number(this.timestart - 7)
-        ) {
-          console.log("进入else");
-          this.context();
-          return "border-radius: 15px;background-color:#409EFF;color:white;padding:0";
-        }
-      }
       if (columnIndex != 0)
         return "border-radius: 15px;background-color:rgb(0, 215, 193);padding:0";
     },
     clickhandle(row, column, event, cell) {
-      let a = row.date.split("-");
-      console.log("点击事件");
-      console.log(this.timesign);
-      if (this.timesign == false) {
-        this.form.room = column.label;
-        this.roomsign = column.label;
-        this.form.date1 = a[0];
-        this.timestart = a[0].split(":")[0];
-        this.timeend = "";
-        this.form.date2 = a[1];
-        this.timesign = true;
-        this.context();
-        // console.log(this.timestart);
-      } else {
-        if (this.form.room == column.label) {
-          for (let i = 0; i < this.choosetable.length; i++) {
-            let c = this.choosetable[i].chose.split("_");
-            if (c[0] == column.label) {
-                console.log("c[1]" + i);
-              console.log(c[1]);
-              console.log(this.timestart);
-              console.log(a[0].split(":")[0]);
-              if (
-                Number(c[1]) > Number(this.timestart) &&
-                Number(c[1]) < Number(a[0].split(":")[0])
-              ) {
-                this.$message.error("当前时间段已有被预约时间段");
-                console.log("before" + i);
-                this.context();
-                this.resetchose();
-                console.log("after" + i);
-                this.context();
-                break;
-              }
-            }
-          }
-
-          if (Number(a[0].split(":")[0]) <= Number(this.timestart)) {
-            console.log("请选择正确的时间段");
-            console.log(a[0].split(":")[0]);
-            this.context();
-            this.$message.error("请选择正确的时间段");
-            this.resetchose();
-          } else {
-            this.form.date2 = a[1];
-            this.timeend = a[1].split(":")[0];
-            this.bechosed = true;
-          }
-        } else {
-          this.$message.error("请选择同一会议室进行预约");
-          this.resetchose();
-        }
-      }
-
-      // console.log("行");
-
-      // console.log("列");
-      // console.log(column);
-      // console.log();
-
+      console.log("行");
+      console.log(row);
+      console.log("列");
+      console.log(column);
+      console.log(column.key);
     },
     // addIconClass({ row, column, rowIndex, columnIndex }) {
     //  if (columnIndex != 0)
@@ -325,15 +199,8 @@ export default {
       room: [],
       tableData: [],
       form: {},
+      selectitem: {},
       datevalue: "",
-      timestart: "",
-      datasign: [],
-      choosetable: {},
-      timesign: false,
-      timestart: "",
-      timeend: "",
-      roomsign: "",
-      bechosed: false,
     };
   },
 };
