@@ -19,20 +19,19 @@
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
       style="width: 100%;" 
-      height="450"  
-      max-height="450">
+      height="550">
       <el-table-column
         type="selection"
         header-align="center"
         align="center"
         width="50">
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         prop="orderId"
         header-align="center"
         align="center"
         label="唯一标识">
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         prop="department"
         header-align="center"
@@ -98,20 +97,30 @@
         prop="equipment"
         header-align="center"
         align="center"
-        label="会场准备">
+        label="设备状态">
+         <template slot-scope="scope">
+          <span v-if="scope.row.equipment==0">无设备</span>
+          <span v-else-if="scope.row.equipment==1">麦克风</span>
+          <span v-else-if="scope.row.equipment==2">投影仪</span>
+          <span v-else>麦克风，投影仪</span>
+        </template>
       </el-table-column>
       <el-table-column
         prop="remark"
         header-align="center"
         align="center"
         label="备注"
-        width="50">
+        width="150">
       </el-table-column>
       <el-table-column
         prop="status"
         header-align="center"
         align="center"
         label="预约状态">
+         <template slot-scope="scope">
+          <span v-if="scope.row.status==0">已成功</span>
+          <span v-else-if="scope.row.status==1">已取消</span>
+         </template>
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -178,6 +187,7 @@
         }).then(({data}) => {
           if (data && data.code === 0) {
             this.dataList = data.page.list
+            this.dataList.orderId = null
             this.totalPage = data.page.totalCount
           } else {
             this.dataList = []
@@ -213,7 +223,7 @@
         var ids = id ? [id] : this.dataListSelections.map(item => {
           return item.orderId
         })
-        this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
+        this.$confirm(`确定进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

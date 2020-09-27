@@ -3,14 +3,14 @@
     :title="!dataForm.id ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="100px">
     <el-form-item label="会议室" prop="roomName">
       <el-input v-model="dataForm.roomName" placeholder="会议室"></el-input>
     </el-form-item>
     <el-form-item label="会议室地点" prop="location">
       <el-input v-model="dataForm.location" placeholder="会议室地点"></el-input>
     </el-form-item>
-    <el-form-item label="状态（0:无设备，1:麦克风，2:投影仪，3:都有）" prop="equipment">
+    <el-form-item label="设备状态" prop="equipment">
       <el-input v-model="dataForm.equipment" placeholder="状态（0:无设备，1:麦克风，2:投影仪，3:都有）"></el-input>
     </el-form-item>
     <el-form-item label="容纳人数" prop="capacity">
@@ -48,7 +48,7 @@
             { required: true, message: '会议室地点不能为空', trigger: 'blur' }
           ],
           equipment: [
-            { required: true, message: '状态（0:无设备，1:麦克风，2:投影仪，3:都有）不能为空', trigger: 'blur' }
+            { required: true, message: '设备状态不能为空', trigger: 'blur' }
           ],
           capacity: [
             { required: true, message: '容纳人数不能为空', trigger: 'blur' }
