@@ -361,10 +361,10 @@ export default {
               ) {
                 this.$message.error("当前时间段已有被预约时间段");
                 // console.log("before" + i);
-                // this.context();
+                this.context();
                 this.resetchose();
                 // console.log("after" + i);
-                // this.context();
+                this.context();
                 break;
               }
             }
@@ -408,15 +408,6 @@ export default {
   },
 
   data() {
-    var validateSum = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请填写参会人数"));
-      } else if (value >this.roomsize) {
-        callback(new Error("参会人数超出上限"));
-      } else {
-        callback();
-      }
-    };
     return {
       room: [],
       roomsize: "",
@@ -433,7 +424,7 @@ export default {
       bechosed: false,
       rules: {
         room: [{ required: true, message: "请填写会议室", trigger: "change" }],
-        sum: [{ validator: validateSum, trigger: "blur" }],
+        sum: [{ required: true, message: "请填写参会人数", trigger: "blur" }],
         leader: [
           { required: true, message: "请填写参会领导", trigger: "blur" },
         ],

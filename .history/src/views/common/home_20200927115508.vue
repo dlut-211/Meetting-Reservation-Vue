@@ -58,7 +58,7 @@
         </el-table>
       </el-col>
       <el-col :span="8">
-        <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+        <el-form ref="form" :model="form" label-width="80px">
           <el-form-item label="使用单位">
             <el-input v-model="form.department" readonly></el-input>
           </el-form-item>
@@ -76,7 +76,7 @@
           <el-form-item label="隶属单位">
             <el-input readonly v-model="form.belong"></el-input>
           </el-form-item>
-          <el-form-item label="会议室" prop="room">
+          <el-form-item label="会议室">
             <el-input
               readonly
               v-model="form.room"
@@ -107,7 +107,7 @@
               ></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="参会人数" prop="sum">
+          <el-form-item label="参会人数">
             <el-col :span="11">
               <el-input
                 type="number"
@@ -117,11 +117,11 @@
               ></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="参会领导" prop="leader">
+          <el-form-item label="参会领导">
             <el-input v-model="form.leader"></el-input>
           </el-form-item>
 
-          <el-form-item label="会议用途" prop="theme">
+          <el-form-item label="会议用途">
             <el-checkbox-group v-model="form.theme" @change="selectedChange">
               <el-checkbox label="研讨会" name="type"></el-checkbox>
               <el-checkbox label="培训" name="type"></el-checkbox>
@@ -137,9 +137,7 @@
             <el-input type="textarea" v-model="form.note"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('form')"
-              >立即预约</el-button
-            >
+            <el-button type="primary" @click="onSubmit">立即预约</el-button>
             <el-button @click="reset">重置</el-button>
           </el-form-item>
         </el-form>
@@ -193,60 +191,17 @@ export default {
         }
       });
     },
-    submitForm(form) {
-      this.$refs[form].validate((valid) => {
-        if (valid) {
-          console.log("submit!");
+    onSubmit() {
+      console.log("submit!");
 
-          this.$http({
-            url: this.$http.adornUrl("/generator/servicemeeting/formsubmit"),
-            method: "post",
-            data: {
-              datechoose: this.form.datechoose,
-              date1: this.form.date1,
-              date2: this.form.date2,
-              datechoose: this.form.datechoose,
-              department: this.form.department,
-              leader: this.form.leader,
-              mobile: this.form.mobile,
-              name: this.form.name,
-              note: this.form.note,
-              room: this.form.room,
-              sum: this.form.sum,
-              theme: this.form.theme,
-            },
-            // 设置请求头
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }).then(({ data }) => {
-            if (data && data.code === 0) {
-              console.log(data);
-              console.log(form);
-              console.log(this.form);
-            } else {
-              this.$message.error(data.msg);
-            }
-          });
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+      console.log(this.form.theme);
     },
     selectedChange(val) {
-      console.log(val);
       for (let i = 0; i < val.length; i++) {
-        console.log(i);
         console.log(val[i]);
-        if (val[i] == "其他（建议备注中说明）") {
-          if (i != 0) {
-            this.form.theme = ["其他（建议备注中说明）"];
-            break;
-          } else {
-            val.splice(i, 1);
-          }
-        }
+        if (val[i] == "其他（建议备注中说明）") console.log("进入");
+        this.value = [];
+        break;
       }
     },
     context() {
@@ -332,10 +287,7 @@ export default {
     clickhandle(row, column, event, cell) {
       let a = row.date.split("-");
       console.log("点击事件");
-      // console.log(column);
-      for (let i = 0; i < this.room.length; i++)
-        if (this.room[i].roomName == column.label)
-          this.roomsize = this.room[i].capacity;
+      console.log(this.timesign);
       if (this.timesign == false) {
         this.form.room = column.label;
         this.roomsign = column.label;
@@ -344,36 +296,36 @@ export default {
         this.timeend = "";
         this.form.date2 = a[1];
         this.timesign = true;
-        // this.context();
+        this.context();
         // console.log(this.timestart);
       } else {
         if (this.form.room == column.label) {
           for (let i = 0; i < this.choosetable.length; i++) {
             let c = this.choosetable[i].chose.split("_");
             if (c[0] == column.label) {
-              // console.log("c[1]" + i);
-              // console.log(c[1]);
-              // console.log(this.timestart);
-              // console.log(a[0].split(":")[0]);
+              console.log("c[1]" + i);
+              console.log(c[1]);
+              console.log(this.timestart);
+              console.log(a[0].split(":")[0]);
               if (
                 Number(c[1]) > Number(this.timestart) &&
                 Number(c[1]) < Number(a[0].split(":")[0])
               ) {
                 this.$message.error("当前时间段已有被预约时间段");
-                // console.log("before" + i);
-                // this.context();
+                console.log("before" + i);
+                this.context();
                 this.resetchose();
-                // console.log("after" + i);
-                // this.context();
+                console.log("after" + i);
+                this.context();
                 break;
               }
             }
           }
 
           if (Number(a[0].split(":")[0]) <= Number(this.timestart)) {
-            // console.log("请选择正确的时间段");
-            // console.log(a[0].split(":")[0]);
-            // this.context();
+            console.log("请选择正确的时间段");
+            console.log(a[0].split(":")[0]);
+            this.context();
             this.$message.error("请选择正确的时间段");
             this.resetchose();
           } else {
@@ -408,18 +360,8 @@ export default {
   },
 
   data() {
-    var validateSum = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请填写参会人数"));
-      } else if (value >this.roomsize) {
-        callback(new Error("参会人数超出上限"));
-      } else {
-        callback();
-      }
-    };
     return {
       room: [],
-      roomsize: "",
       tableData: [],
       form: {},
       datevalue: "",
@@ -431,21 +373,6 @@ export default {
       timeend: "",
       roomsign: "",
       bechosed: false,
-      rules: {
-        room: [{ required: true, message: "请填写会议室", trigger: "change" }],
-        sum: [{ validator: validateSum, trigger: "blur" }],
-        leader: [
-          { required: true, message: "请填写参会领导", trigger: "blur" },
-        ],
-        theme: [
-          {
-            type: "array",
-            required: true,
-            message: "请至少选择一个活动性质",
-            trigger: "change",
-          },
-        ],
-      },
       // expireTimeOption: {
       //   disabledDate(date) {
       //     // 当天可选：

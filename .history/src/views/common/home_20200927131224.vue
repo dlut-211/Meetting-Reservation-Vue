@@ -76,7 +76,7 @@
           <el-form-item label="隶属单位">
             <el-input readonly v-model="form.belong"></el-input>
           </el-form-item>
-          <el-form-item label="会议室" prop="room">
+          <el-form-item label="会议室"prop="sum">
             <el-input
               readonly
               v-model="form.room"
@@ -184,9 +184,9 @@ export default {
             belong: data.now_user.department,
             datechoose: this.datevalue,
             theme: [],
-            date1: null,
-            date2: null,
-            room: null,
+            // date1: null,
+            // date2: null,
+            // room: null,
           };
         } else {
           this.$message.error(data.msg);
@@ -196,43 +196,14 @@ export default {
     submitForm(form) {
       this.$refs[form].validate((valid) => {
         if (valid) {
-          console.log("submit!");
-
-          this.$http({
-            url: this.$http.adornUrl("/generator/servicemeeting/formsubmit"),
-            method: "post",
-            data: {
-              datechoose: this.form.datechoose,
-              date1: this.form.date1,
-              date2: this.form.date2,
-              datechoose: this.form.datechoose,
-              department: this.form.department,
-              leader: this.form.leader,
-              mobile: this.form.mobile,
-              name: this.form.name,
-              note: this.form.note,
-              room: this.form.room,
-              sum: this.form.sum,
-              theme: this.form.theme,
-            },
-            // 设置请求头
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }).then(({ data }) => {
-            if (data && data.code === 0) {
-              console.log(data);
-              console.log(form);
-              console.log(this.form);
-            } else {
-              this.$message.error(data.msg);
-            }
-          });
+          alert("submit!");
         } else {
           console.log("error submit!!");
           return false;
         }
       });
+
+      console.log(this.form.theme);
     },
     selectedChange(val) {
       console.log(val);
@@ -332,10 +303,7 @@ export default {
     clickhandle(row, column, event, cell) {
       let a = row.date.split("-");
       console.log("点击事件");
-      // console.log(column);
-      for (let i = 0; i < this.room.length; i++)
-        if (this.room[i].roomName == column.label)
-          this.roomsize = this.room[i].capacity;
+      console.log(this.timesign);
       if (this.timesign == false) {
         this.form.room = column.label;
         this.roomsign = column.label;
@@ -344,36 +312,36 @@ export default {
         this.timeend = "";
         this.form.date2 = a[1];
         this.timesign = true;
-        // this.context();
+        this.context();
         // console.log(this.timestart);
       } else {
         if (this.form.room == column.label) {
           for (let i = 0; i < this.choosetable.length; i++) {
             let c = this.choosetable[i].chose.split("_");
             if (c[0] == column.label) {
-              // console.log("c[1]" + i);
-              // console.log(c[1]);
-              // console.log(this.timestart);
-              // console.log(a[0].split(":")[0]);
+              console.log("c[1]" + i);
+              console.log(c[1]);
+              console.log(this.timestart);
+              console.log(a[0].split(":")[0]);
               if (
                 Number(c[1]) > Number(this.timestart) &&
                 Number(c[1]) < Number(a[0].split(":")[0])
               ) {
                 this.$message.error("当前时间段已有被预约时间段");
-                // console.log("before" + i);
-                // this.context();
+                console.log("before" + i);
+                this.context();
                 this.resetchose();
-                // console.log("after" + i);
-                // this.context();
+                console.log("after" + i);
+                this.context();
                 break;
               }
             }
           }
 
           if (Number(a[0].split(":")[0]) <= Number(this.timestart)) {
-            // console.log("请选择正确的时间段");
-            // console.log(a[0].split(":")[0]);
-            // this.context();
+            console.log("请选择正确的时间段");
+            console.log(a[0].split(":")[0]);
+            this.context();
             this.$message.error("请选择正确的时间段");
             this.resetchose();
           } else {
@@ -408,18 +376,8 @@ export default {
   },
 
   data() {
-    var validateSum = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请填写参会人数"));
-      } else if (value >this.roomsize) {
-        callback(new Error("参会人数超出上限"));
-      } else {
-        callback();
-      }
-    };
     return {
       room: [],
-      roomsize: "",
       tableData: [],
       form: {},
       datevalue: "",
@@ -432,8 +390,8 @@ export default {
       roomsign: "",
       bechosed: false,
       rules: {
-        room: [{ required: true, message: "请填写会议室", trigger: "change" }],
-        sum: [{ validator: validateSum, trigger: "blur" }],
+        room: [{ required: true, message: "请填写会议室", trigger: "blur" }],
+        sum: [{ required: true, message: "请填写参会人数", trigger: "blur" }],
         leader: [
           { required: true, message: "请填写参会领导", trigger: "blur" },
         ],
