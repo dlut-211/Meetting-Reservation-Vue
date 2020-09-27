@@ -29,7 +29,7 @@
         prop="orderId"
         header-align="center"
         align="center"
-        label="楼宇信息">
+        label="唯一标识">
       </el-table-column>
       <el-table-column
         prop="department"
