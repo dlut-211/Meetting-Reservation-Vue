@@ -4,7 +4,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.key" placeholder="请输入预约人姓名" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -97,7 +97,8 @@
         prop="equipment"
         header-align="center"
         align="center"
-        label="设备状态">
+        label="设备状态"
+        width="120">
          <template slot-scope="scope">
           <span v-if="scope.row.equipment==0">无设备</span>
           <span v-else-if="scope.row.equipment==1">麦克风</span>
@@ -111,6 +112,9 @@
         align="center"
         label="备注"
         width="150">
+        <!-- <template slot-scope="scope">
+          <span v-if="scope.row.remark==''">无</span>
+        </template> -->
       </el-table-column>
       <el-table-column
         prop="status"
@@ -182,6 +186,7 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
+            //key为查询字段
             'key': this.dataForm.key
           })
         }).then(({data}) => {
@@ -212,12 +217,12 @@
         this.dataListSelections = val
       },
       // 新增 / 修改
-      addOrUpdateHandle (id) {
-        this.addOrUpdateVisible = true
-        this.$nextTick(() => {
-          this.$refs.addOrUpdate.init(id)
-        })
-      },
+      // addOrUpdateHandle (id) {
+      //   this.addOrUpdateVisible = true
+      //   this.$nextTick(() => {
+      //     this.$refs.addOrUpdate.init(id)
+      //   })
+      // },
       // 删除
       deleteHandle (id) {
         var ids = id ? [id] : this.dataListSelections.map(item => {
