@@ -76,7 +76,7 @@
           <el-form-item label="隶属单位">
             <el-input readonly v-model="form.belong"></el-input>
           </el-form-item>
-          <el-form-item label="会议室" prop="room">
+          <el-form-item label="会议室">
             <el-input
               readonly
               v-model="form.room"
@@ -137,9 +137,7 @@
             <el-input type="textarea" v-model="form.note"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('form')"
-              >立即预约</el-button
-            >
+            <el-button type="primary"@click="submitForm('form')">立即预约</el-button>
             <el-button @click="reset">重置</el-button>
           </el-form-item>
         </el-form>
@@ -194,14 +192,14 @@ export default {
       });
     },
     submitForm(form) {
-      this.$refs[form].validate((valid) => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+       this.$refs[form].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
 
       console.log(this.form.theme);
     },
@@ -390,19 +388,15 @@ export default {
       roomsign: "",
       bechosed: false,
       rules: {
-        room: [{ required: true, message: "请填写会议室", trigger: "change" }],
-        sum: [{ required: true, message: "请填写参会人数", trigger: "blur" }],
-        leader: [
-          { required: true, message: "请填写参会领导", trigger: "blur" },
-        ],
-        theme: [
-          {
-            type: "array",
-            required: true,
-            message: "请至少选择一个活动性质",
-            trigger: "change",
-          },
-        ],
+          sum: [
+            { required: true, message: '请填写参会人数', trigger: 'blur' }
+          ],
+             leader: [
+            { required: true, message: '请填写参会人数', trigger: 'blur' }
+          ],
+          theme: [
+            { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+          ],
       },
       // expireTimeOption: {
       //   disabledDate(date) {

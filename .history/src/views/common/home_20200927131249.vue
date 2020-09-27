@@ -390,7 +390,7 @@ export default {
       roomsign: "",
       bechosed: false,
       rules: {
-        room: [{ required: true, message: "请填写会议室", trigger: "change" }],
+        room: [{ required: true, message: "请填写会议室", trigger: "blur" }],
         sum: [{ required: true, message: "请填写参会人数", trigger: "blur" }],
         leader: [
           { required: true, message: "请填写参会领导", trigger: "blur" },

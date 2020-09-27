@@ -58,7 +58,7 @@
         </el-table>
       </el-col>
       <el-col :span="8">
-        <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+        <el-form ref="form" :model="form" label-width="80px">
           <el-form-item label="使用单位">
             <el-input v-model="form.department" readonly></el-input>
           </el-form-item>
@@ -76,7 +76,7 @@
           <el-form-item label="隶属单位">
             <el-input readonly v-model="form.belong"></el-input>
           </el-form-item>
-          <el-form-item label="会议室" prop="room">
+          <el-form-item label="会议室">
             <el-input
               readonly
               v-model="form.room"
@@ -107,7 +107,7 @@
               ></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="参会人数" prop="sum">
+          <el-form-item label="参会人数">
             <el-col :span="11">
               <el-input
                 type="number"
@@ -117,11 +117,11 @@
               ></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="参会领导" prop="leader">
+          <el-form-item label="参会领导">
             <el-input v-model="form.leader"></el-input>
           </el-form-item>
 
-          <el-form-item label="会议用途" prop="theme">
+          <el-form-item label="会议用途">
             <el-checkbox-group v-model="form.theme" @change="selectedChange">
               <el-checkbox label="研讨会" name="type"></el-checkbox>
               <el-checkbox label="培训" name="type"></el-checkbox>
@@ -137,9 +137,7 @@
             <el-input type="textarea" v-model="form.note"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('form')"
-              >立即预约</el-button
-            >
+            <el-button type="primary" @click="onSubmit">立即预约</el-button>
             <el-button @click="reset">重置</el-button>
           </el-form-item>
         </el-form>
@@ -193,30 +191,20 @@ export default {
         }
       });
     },
-    submitForm(form) {
-      this.$refs[form].validate((valid) => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+    onSubmit() {
+      console.log("submit!");
 
       console.log(this.form.theme);
     },
     selectedChange(val) {
-      console.log(val);
       for (let i = 0; i < val.length; i++) {
-        console.log(i);
-        console.log(val[i]);
+   
         if (val[i] == "其他（建议备注中说明）") {
-          if (i != 0) {
-            this.form.theme = ["其他（建议备注中说明）"];
-            break;
-          } else {
-            val.splice(i, 1);
-          }
+        
+          this.form.theme = [];
+               console.log(val);
+
+          break;
         }
       }
     },
@@ -389,21 +377,6 @@ export default {
       timeend: "",
       roomsign: "",
       bechosed: false,
-      rules: {
-        room: [{ required: true, message: "请填写会议室", trigger: "change" }],
-        sum: [{ required: true, message: "请填写参会人数", trigger: "blur" }],
-        leader: [
-          { required: true, message: "请填写参会领导", trigger: "blur" },
-        ],
-        theme: [
-          {
-            type: "array",
-            required: true,
-            message: "请至少选择一个活动性质",
-            trigger: "change",
-          },
-        ],
-      },
       // expireTimeOption: {
       //   disabledDate(date) {
       //     // 当天可选：
