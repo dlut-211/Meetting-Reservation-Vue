@@ -35,29 +35,20 @@
         prop="department"
         header-align="center"
         align="center"
-        label="使用单位">
-      </el-table-column>
-      <el-table-column
-        prop="roomName"
-        header-align="center"
-        align="center"
-        label="会议室"
-        width="180">
+        label="使用单位（例:软件学院）">
       </el-table-column>
       <el-table-column
         prop="roomUser"
         header-align="center"
         align="center"
-        label="预约人"
-        width="70">
+        label="会议室预约人">
       </el-table-column>
-      <!-- <el-table-column
-        prop="roomDate"
+      <el-table-column
+        prop="roomName"
         header-align="center"
         align="center"
-        label="会议日期"
-        width="100">
-      </el-table-column> -->
+        label="会议室名称">
+      </el-table-column>
       <el-table-column
         prop="startTime"
         header-align="center"
@@ -73,7 +64,7 @@
         width="102">
       </el-table-column>
       <el-table-column
-        prop="meetingTheme"
+        prop="headCount"
         header-align="center"
         align="center"
         label="会议主题"
@@ -93,29 +84,28 @@
         label="参会人数">
       </el-table-column>
       <el-table-column
-        prop="equipment"
+        prop="meetingTheme"
         header-align="center"
         align="center"
-        label="会场准备">
+        label="会议主题">
       </el-table-column>
       <el-table-column
         prop="remark"
         header-align="center"
         align="center"
-        label="备注"
-        width="50">
+        label="备注">
       </el-table-column>
       <el-table-column
         prop="status"
         header-align="center"
         align="center"
-        label="预约状态">
+        label="预约状态（0:审核中 1，通过，2：未通过，3:已取消）">
       </el-table-column>
       <el-table-column
         fixed="right"
         header-align="center"
         align="center"
-        width="50"
+        width="150"
         label="操作">
         <template slot-scope="scope">
           <!-- <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.orderId)">修改</el-button> -->
@@ -123,7 +113,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- 分页处理 -->
     <el-pagination
       @size-change="sizeChangeHandle"
       @current-change="currentChangeHandle"
