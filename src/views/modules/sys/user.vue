@@ -9,6 +9,22 @@
         <el-button v-if="isAuth('sys:user:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button v-if="isAuth('sys:user:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
+      <el-form-item>
+        <el-upload
+          class="upload-demo"
+          ref="upload"
+          :action="uploadUrl()"
+          accept=".xls, .xlsx" 
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+          
+          :before-upload="beforeAvatarUpload">
+          <el-button slot="trigger" type="primary" title="只能上传excel文件">选取文件</el-button>
+          
+          </el-upload>
+          
+      </el-form-item>
     </el-form>
     <el-table
       :data="dataList"
@@ -98,6 +114,7 @@
         dataForm: {
           userName: ''
         },
+        fileName:"",
         dataList: [],
         pageIndex: 1,
         pageSize: 10,
@@ -114,6 +131,59 @@
       this.getDataList()
     },
     methods: {
+      // Excel批量增加用户
+       uploadUrl: function() {
+      return (
+             this.$http.adornUrl(`/sys/user/excelupdate?token=${this.$cookie.get('token')}`)
+      );
+    },
+    uploadSuccess(response, file, fileList) {
+      if (response.status) {
+        alert("文件导入成功");
+      } else {
+        alert("文件导入失败");
+      }
+    },
+    uploadFalse(response, file, fileList) {
+      alert("文件上传失败！");
+    },
+    // 上传前对文件的大小的判断
+    beforeAvatarUpload(file) {
+      this.fileName=file.name;
+      console.log("文件名"+this.fileName);
+      const extension = file.name.split(".")[1] === "xls";
+      const extension2 = file.name.split(".")[1] === "xlsx";
+      const extension3 = file.name.split(".")[1] === "doc";
+      const extension4 = file.name.split(".")[1] === "docx";
+      const isLt2M = file.size / 1024 / 1024 < 10;
+         if (!extension && !extension2 && !extension3 && !extension4) {
+           alert("上传模板只能是 xls、xlsx、doc、docx 格式!");
+          }
+          if (!isLt2M) {
+           console.log("上传模板大小不能超过 10MB!");
+         }
+        return extension || extension2 || extension3 || (extension4 && isLt2M);
+    },
+    submitUpload() {
+      if (this.businessType != null) {
+        //触发组件的action
+        this.$refs.upload.submit();
+      }
+      if (this.businessType == null) {
+        this.businessType = "businessType不能为空";
+      }
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview(file) {
+      if (file.response.status) {
+        alert("此文件导入成功");
+      } else {
+        alert("此文件导入失败");
+      }
+    },
+
       // 获取数据列表
       getDataList () {
         this.dataListLoading = true
