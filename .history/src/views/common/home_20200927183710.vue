@@ -21,12 +21,12 @@
           @cell-click="clickhandle"
           style="width: 95%"
         >
-          <el-table-column prop="date" width="120"> </el-table-column>
+          <el-table-column prop="date" min-width="110"> </el-table-column>
           <el-table-column
             v-for="(item, index) in room"
             :key="index"
             :label="item.roomName"
-            width="110"
+            width="100"
           >
             <template slot-scope="scope">
               <el-button
@@ -35,8 +35,8 @@
                   float: left;
                   font-size: 18px;
                   margin-left: 10%;
-                  color: #686868;
-                  font-weight: 800;
+                  color: white;
+
                   line-height: 25px;
                 "
                 >{{ item.capacity }}</el-button
@@ -83,17 +83,15 @@
               placeholder="点击左侧进行选择"
             ></el-input>
           </el-form-item>
-            <el-form-item label="参会人数">
+          <el-form-item label="活动日期">
             <el-col :span="11">
-              <el-input
-                v-model="form.datechoose"
-              ></el-input>
+              <el-input v-model="form.datechoose"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="活动时间">
             <el-col :span="11">
               <el-input
-              readonly
+                readonly
                 placeholder="开始时间"
                 v-model="form.date1"
                 style="width: 100%"
@@ -102,7 +100,7 @@
             <el-col class="line" :span="2" style="text-align: center">-</el-col>
             <el-col :span="11">
               <el-input
-              readonly
+                readonly
                 placeholder="结束时间"
                 v-model="form.date2"
                 style="width: 100%"
@@ -139,12 +137,10 @@
             <el-input type="textarea" v-model="form.note"></el-input>
           </el-form-item>
           <el-form-item>
-
             <el-button type="primary" @click="submitForm('form')"
               >立即预约</el-button
             >
             <el-button @click="reset">重置</el-button>
-
           </el-form-item>
         </el-form>
       </el-col>
@@ -158,9 +154,7 @@ export default {
     this.getNowTime();
   },
   mounted() {
-
     this.getTanleMsg();
-
   },
   methods: {
     getTanleMsg() {
@@ -227,11 +221,9 @@ export default {
             },
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              // console.log(data);
-              // console.log(form);
-              // console.log(this.form);
-              this.$message(data.msg);
-              this.$router.go(0);
+              console.log(data);
+              console.log(form);
+              console.log(this.form);
             } else {
               this.$message.error(data.msg);
             }
@@ -257,7 +249,6 @@ export default {
         }
       }
     },
-
     context() {
       console.log("当前各项值");
       console.log("this.timesign");
@@ -295,14 +286,50 @@ export default {
       console.log("重置时间");
       this.$router.go(0);
     },
-
     // 单元格的 style 的回调方法
     cellStyle({ row, column, rowIndex, columnIndex }) {
+      //初始渲染已选择
+      for (let i = 0; i < this.choosetable.length; i++) {
+        let a = this.choosetable[i].chose.split("_");
+        if (
+          column.label == a[0] &&
+          rowIndex >= a[1] - 7 &&
+          rowIndex <= a[2] - 8
+        ) {
+          return "border-radius: 15px;background-color:#909399;color:white;padding:0";
+        }
+      }
+
+      //点击选择
+      console.log(this.timestart);
+      //console.log(rowIndex);
+      if (columnIndex != 0 && this.timesign == true) {
+        this.context();
+        if (
+          this.timeend != "" &&
+          column.label == this.roomsign &&
+          rowIndex >= Number(this.timestart - 7) &&
+          rowIndex <= Number(this.timeend - 8) &&
+          this.bechosed == true
+        ) {
+          console.log("进入if");
+          this.context();
+          return "border-radius: 15px;background-color:#409EFF;color:white;padding:0";
+        }
+
+        if (
+          column.label == this.roomsign &&
+          rowIndex == Number(this.timestart - 7)
+        ) {
+          console.log("进入else");
+          this.context();
+          return "border-radius: 15px;background-color:#409EFF;color:white;padding:0";
+        }
+      }
       if (columnIndex != 0)
         return "border-radius: 15px;background-color:rgb(0, 215, 193);padding:0";
     },
     clickhandle(row, column, event, cell) {
-
       let a = row.date.split("-");
       console.log("点击事件");
       // console.log(column);
@@ -365,7 +392,6 @@ export default {
       // console.log("列");
       // console.log(column);
       // console.log();
-
     },
     // addIconClass({ row, column, rowIndex, columnIndex }) {
     //  if (columnIndex != 0)
@@ -385,7 +411,7 @@ export default {
     var validateSum = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请填写参会人数"));
-      } else if (value > this.roomsize) {
+      } else if (value >this.roomsize) {
         callback(new Error("参会人数超出上限"));
       } else {
         callback();
@@ -397,7 +423,6 @@ export default {
       tableData: [],
       form: {},
       datevalue: "",
-
       timestart: "",
       datasign: [],
       choosetable: {},
@@ -427,7 +452,6 @@ export default {
       //     return date.getTime() < Date.now() - 24 * 60 * 60 * 1000;
       //   },
       // },
-
     };
   },
 };
