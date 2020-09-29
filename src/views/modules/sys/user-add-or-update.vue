@@ -13,8 +13,8 @@
       <el-form-item label="确认密码" prop="comfirmPassword" :class="{ 'is-required': !dataForm.id }">
         <el-input v-model="dataForm.comfirmPassword" type="password" placeholder="确认密码"></el-input>
       </el-form-item>
-      <el-form-item label="邮箱" prop="email">
-        <el-input v-model="dataForm.email" placeholder="邮箱"></el-input>
+      <el-form-item label="姓名" prop="name">
+        <el-input v-model="dataForm.name" placeholder="姓名"></el-input>
       </el-form-item>
       <el-form-item label="手机号" prop="mobile">
         <el-input v-model="dataForm.mobile" placeholder="手机号"></el-input>
@@ -58,13 +58,13 @@
           callback()
         }
       }
-      var validateEmail = (rule, value, callback) => {
-        if (!isEmail(value)) {
-          callback(new Error('邮箱格式错误'))
-        } else {
-          callback()
-        }
-      }
+      // var validateEmail = (rule, value, callback) => {
+      //   if (!isEmail(value)) {
+      //     callback(new Error('姓名格式错误'))
+      //   } else {
+      //     callback()
+      //   }
+      // }
       var validateMobile = (rule, value, callback) => {
         if (!isMobile(value)) {
           callback(new Error('手机号格式错误'))
@@ -81,7 +81,7 @@
           password: '',
           comfirmPassword: '',
           salt: '',
-          email: '',
+          name: '',
           mobile: '',
           roleIdList: [],
           status: 1
@@ -96,9 +96,12 @@
           comfirmPassword: [
             { validator: validateComfirmPassword, trigger: 'blur' }
           ],
-          email: [
-            { required: true, message: '邮箱不能为空', trigger: 'blur' },
-            { validator: validateEmail, trigger: 'blur' }
+          // email: [
+          //   { required: true, message: '姓名不能为空', trigger: 'blur' },
+          //   { validator: validateEmail, trigger: 'blur' }
+          // ],
+          name: [
+            { required: true, message: '姓名不能为空', trigger: 'blur'}
           ],
           mobile: [
             { required: true, message: '手机号不能为空', trigger: 'blur' },
@@ -131,7 +134,7 @@
               if (data && data.code === 0) {
                 this.dataForm.userName = data.user.username
                 this.dataForm.salt = data.user.salt
-                this.dataForm.email = data.user.email
+                this.dataForm.name = data.user.email
                 this.dataForm.mobile = data.user.mobile
                 this.dataForm.roleIdList = data.user.roleIdList
                 this.dataForm.status = data.user.status
@@ -152,7 +155,7 @@
                 'username': this.dataForm.userName,
                 'password': this.dataForm.password,
                 'salt': this.dataForm.salt,
-                'email': this.dataForm.email,
+                'email': this.dataForm.name,
                 'mobile': this.dataForm.mobile,
                 'status': this.dataForm.status,
                 'roleIdList': this.dataForm.roleIdList

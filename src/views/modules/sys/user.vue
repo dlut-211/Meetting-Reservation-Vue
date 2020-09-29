@@ -55,7 +55,7 @@
         prop="email"
         header-align="center"
         align="center"
-        label="邮箱">
+        label="姓名">
       </el-table-column>
       <el-table-column
         prop="mobile"
