@@ -15,7 +15,7 @@
     <el-table
       :data="dataList"
       border
-      stripe="true"
+      stripe
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
       style="width: 100%;" 
@@ -93,7 +93,7 @@
         align="center"
         label="参会人数">
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         prop="equipment"
         header-align="center"
         align="center"
@@ -104,8 +104,8 @@
           <span v-else-if="scope.row.equipment==1">麦克风</span>
           <span v-else-if="scope.row.equipment==2">投影仪</span>
           <span v-else>麦克风，投影仪</span>
-        </template>
-      </el-table-column>
+         </template>
+      </el-table-column> -->
       <el-table-column
         prop="remark"
         header-align="center"
@@ -192,6 +192,7 @@
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
+            console.log(data);
             this.dataList = data.page.list
             this.dataList.orderId = null
             this.totalPage = data.page.totalCount

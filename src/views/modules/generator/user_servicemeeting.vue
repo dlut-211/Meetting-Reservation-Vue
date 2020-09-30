@@ -5,8 +5,7 @@
     <el-form
       :inline="true"
       :model="dataForm"
-      @keyup.enter.native="getDataList()"
-    >
+      @keyup.enter.native="getDataList()">
       <!-- <el-form-item>
         <el-input v-model="dataForm.key" placeholder="会议室名称" clearable></el-input>
       </el-form-item> -->
@@ -17,26 +16,22 @@
           v-if="isAuth('generator:servicemeeting:delete')"
           type="danger"
           @click="deleteHandle()"
-          :disabled="dataListSelections.length <= 0"
-          >批量删除</el-button
-        >
+          :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
       :data="dataList"
       border
-      
+      stripe
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
       style="width: 100%"
-      height="550"
-    >
+      height="550">
       <el-table-column
         type="selection"
         header-align="center"
         align="center"
-        width="50"
-      >
+        width="50">
       </el-table-column>
       <!-- <el-table-column
         prop="orderId"
@@ -48,24 +43,21 @@
         prop="department"
         header-align="center"
         align="center"
-        label="使用单位"
-      >
+        label="使用单位">
       </el-table-column>
       <el-table-column
         prop="roomName"
         header-align="center"
         align="center"
         label="会议室"
-        width="180"
-      >
+        width="180">
       </el-table-column>
       <el-table-column
         prop="roomUser"
         header-align="center"
         align="center"
         label="预约人"
-        width="70"
-      >
+        width="70">
       </el-table-column>
       <!-- <el-table-column
         prop="roomDate"
@@ -79,94 +71,81 @@
         header-align="center"
         align="center"
         label="开始时间"
-        width="102"
-      >
+        width="102">
       </el-table-column>
       <el-table-column
         prop="endTime"
         header-align="center"
         align="center"
         label="结束时间"
-        width="102"
-      >
+        width="102">
       </el-table-column>
       <el-table-column
         prop="meetingTheme"
         header-align="center"
         align="center"
         label="会议主题"
-        width="150"
-      >
+        width="150">
       </el-table-column>
       <el-table-column
         prop="leader"
         header-align="center"
         align="center"
         label="参会校领导"
-        width="92"
-      >
+        width="92">
       </el-table-column>
       <el-table-column
         prop="headCount"
         header-align="center"
         align="center"
-        label="参会人数"
-      >
+        label="参会人数">
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         prop="equipment"
         header-align="center"
         align="center"
         label="设备状态"
-        width="120"
-      >
-         <template slot-scope="scope">
-                    <span v-if="scope.row.equipment == 0">无设备</span>
-                    <span v-else-if="scope.row.equipment == 1">麦克风</span>
-                    <span v-else-if="scope.row.equipment == 2">投影仪</span>
-                    <span v-else>麦克风，投影仪</span>         </template
-        >
-      </el-table-column>
+        width="120">
+        <template slot-scope="scope">
+           <span v-if="scope.row.equipment == 0">无设备</span>
+           <span v-else-if="scope.row.equipment == 1">麦克风</span>
+           <span v-else-if="scope.row.equipment == 2">投影仪</span>
+           <span v-else>麦克风，投影仪</span>         
+        </template>
+      </el-table-column> -->
       <el-table-column
         prop="remark"
         header-align="center"
         align="center"
         label="备注"
-        width="150"
-      >
+        width="150">
         <template slot-scope="scope">
-                    <span v-if="scope.row.remark == null">无</span>
+          <span v-if="scope.row.remark == null">无</span>
           <span v-else>{{ scope.row.remark }}</span>
-                  </template
-        >
+        </template>
       </el-table-column>
       <el-table-column
         prop="status"
         header-align="center"
         align="center"
-        label="预约状态"
-      >
-         <template slot-scope="scope">
-                    <span v-if="scope.row.status == 0">已成功</span>
-                    <span v-else-if="scope.row.status == 1">已取消</span>
-                   </template
-        >
+        label="预约状态">
+        <template slot-scope="scope">
+           <span v-if="scope.row.status == 0">已成功</span>
+           <span v-else-if="scope.row.status == 1">已取消</span>
+        </template>
       </el-table-column>
       <el-table-column
         fixed="right"
         header-align="center"
         align="center"
         width="50"
-        label="操作"
-      >
+        label="操作">
         <template slot-scope="scope">
           <!-- <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.orderId)">修改</el-button> -->
           <el-button
             type="text"
             size="small"
-            @click="deleteHandle(scope.row.orderId)"
-            >删除</el-button
-          >
+            @click="deleteHandle(scope.row.orderId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -178,15 +157,13 @@
       :page-sizes="[10, 20, 50, 100]"
       :page-size="pageSize"
       :total="totalPage"
-      layout="total, sizes, prev, pager, next, jumper"
-    >
+      layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update
       v-if="addOrUpdateVisible"
       ref="addOrUpdate"
-      @refreshDataList="getDataList"
-    ></add-or-update>
+      @refreshDataList="getDataList"></add-or-update>
   </div>
 </template>
 
