@@ -4,7 +4,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="请输入预约人姓名" clearable></el-input>
+        <el-input v-model="dataForm.key" placeholder="预约人姓名" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -112,9 +112,10 @@
         align="center"
         label="备注"
         width="150">
-        <!-- <template slot-scope="scope">
-          <span v-if="scope.row.remark==''">无</span>
-        </template> -->
+        <template slot-scope="scope">
+          <span v-if="scope.row.remark==null">无</span>
+          <span v-else>{{scope.row.remark}}</span>
+        </template>
       </el-table-column>
       <el-table-column
         prop="status"
