@@ -1,7 +1,7 @@
 <template>
   <nav class="site-navbar" :class="'site-navbar--' + navbarLayoutType">
     <div class="site-navbar__header">
-      <h1 class="site-navbar__brand" @click="$router.push({ name: 'home' })">
+      <h1 class="site-navbar__brand" @click="jumpHomepage()">
         <a class="site-navbar__brand-lg" href="javascript:;">会议预约系统</a>
         <a class="site-navbar__brand-mini" href="javascript:;">预约</a>
       </h1>
@@ -82,6 +82,15 @@
       }
     },
     methods: {
+      //根据不同用户跳转不同首页
+      jumpHomepage() {
+        // console.log(this.$cookie.get('username'))
+        if(this.$cookie.get('username')=='root') {
+          this.$router.push({ name: 'ahome' })
+        }else{
+          this.$router.push({ name: 'home' })
+        }
+      },
       // 修改密码
       updatePasswordHandle () {
         this.updatePassowrdVisible = true

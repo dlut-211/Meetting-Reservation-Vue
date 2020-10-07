@@ -4,7 +4,7 @@
       <div class="site-content">
         <div class="brand-info">
           <h2 class="brand-info__text">会议预约系统</h2>
-          <p class="brand-info__intro">会议预约系统为大连理工大学的教师提供方便快捷的会议预约服务，一约即。</p>
+          <p class="brand-info__intro">会议预约系统为大连理工大学的教师提供方便快捷的会议预约服务，界面简洁，一约即成。</p>
         </div>
         <div class="login-main">
           <h3 class="login-title">管理员登录</h3>
@@ -81,6 +81,7 @@
             }).then(({data}) => {
               if (data && data.code === 0) {
                 this.$cookie.set('token', data.token)
+                this.$cookie.set('username',this.dataForm.userName)
                 if(this.dataForm.userName=="root"){
                   this.$router.replace({ name: 'ahome' })
                 }else{
