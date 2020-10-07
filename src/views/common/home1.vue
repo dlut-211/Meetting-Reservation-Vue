@@ -4,45 +4,32 @@
   <div>
     <el-row>
       <el-col :span="16">
-        <el-date-picker v-model="datevalue" type="date" placeholder="选择日期">
-        </el-date-picker>
         <el-table
           class="customer-table"
           :data="tableData"
           :cell-style="cellStyle"
           border
           @cell-click="clickhandle"
-          style="width: 95%"
+          style="width: 90%"
         >
-          <el-table-column prop="date" min-width="110"> </el-table-column>
+          <el-table-column prop="date" label="2020/9/21"></el-table-column>
           <el-table-column
-            v-for="(item, index) in room"
+            v-for="(item,index) in room"
+            :prop="item.roomId"
             :key="index"
             :label="item.roomName"
-            width="100"
+            width="110"
           >
             <template slot-scope="scope">
               <el-button
                 type="text"
-                style="
-                  float: left;
-                  font-size: 18px;
-                  margin-left: 10%;
-                  color: #686868;
-                  font-weight: 800;
-                  line-height: 25px;
-                "
-                >{{ item.capacity }}</el-button
-              >
+                class="iconfont icon-mic"
+                style="float: left;font-size: 25px;  margin-left: 10%; color: #686868;"
+              ></el-button>
               <el-button
                 type="text"
                 class="iconfont icon-shexiangtou_guanbi"
-                style="
-                  float: right;
-                  font-size: 25px;
-                  margin-right: 10%;
-                  color: #686868;
-                "
+                style="float: right;font-size: 25px;  margin-right: 10%; color: #686868;"
               ></el-button>
             </template>
             <!-- <span style="float:left" class="iconfont icon-mic"></span>
@@ -53,63 +40,35 @@
       <el-col :span="8">
         <el-form ref="form" :model="form" label-width="80px">
           <el-form-item label="使用单位">
-            <el-input v-model="form.department" readonly></el-input>
+            <el-select v-model="form.department" placeholder="请选择使用单位">
+              <el-option label="软件学院" value="1"></el-option>
+              <el-option label="微电子学院" value="2"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="联系人">
             <el-input v-model="form.name" readonly></el-input>
           </el-form-item>
           <el-form-item label="联系电话">
-            <el-input
-              type="number"
-              readonly
-              v-model="form.mobile"
-              @mousewheel.native.prevent
-            ></el-input>
+            <el-input type="number" readonly v-model="form.mobile" @mousewheel.native.prevent></el-input>
           </el-form-item>
           <el-form-item label="隶属单位">
             <el-input readonly v-model="form.belong"></el-input>
           </el-form-item>
           <el-form-item label="会议室">
-            <el-input
-              readonly
-              v-model="form.room"
-              placeholder="点击左侧进行选择"
-            ></el-input>
-          </el-form-item>
-            <el-form-item label="参会人数">
-            <el-col :span="11">
-              <el-input
-                v-model="form.datechoose"
-              ></el-input>
-            </el-col>
+            <el-input readonly v-model="form.room" placeholder="点击左侧进行选择"></el-input>
           </el-form-item>
           <el-form-item label="活动时间">
             <el-col :span="11">
-              <el-input
-              readonly
-                placeholder="开始时间"
-                v-model="form.date1"
-                style="width: 100%"
-              ></el-input>
+              <el-input placeholder="开始时间" v-model="form.date1" style="width: 100%;"></el-input>
             </el-col>
-            <el-col class="line" :span="2" style="text-align: center">-</el-col>
+            <el-col class="line" :span="2" style="text-align:center">-</el-col>
             <el-col :span="11">
-              <el-input
-              readonly
-                placeholder="结束时间"
-                v-model="form.date2"
-                style="width: 100%"
-              ></el-input>
+              <el-input placeholder="结束时间" v-model="form.date2" style="width: 100%;"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="参会人数">
             <el-col :span="11">
-              <el-input
-                type="number"
-                min="2"
-                max="100"
-                v-model="form.sum"
-              ></el-input>
+              <el-input type="number" min="2" max="100" v-model="form.sum"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="参会领导">
@@ -121,10 +80,7 @@
               <el-checkbox label="研讨会" name="type"></el-checkbox>
               <el-checkbox label="培训" name="type"></el-checkbox>
               <el-checkbox label="讲座" name="type"></el-checkbox>
-              <el-checkbox
-                label="其他（建议备注中说明）"
-                name="type"
-              ></el-checkbox>
+              <el-checkbox label="其他（建议备注中说明）" name="type"></el-checkbox>
             </el-checkbox-group>
           </el-form-item>
 
@@ -158,16 +114,21 @@ export default {
     }).then(({ data }) => {
       if (data && data.code === 0) {
         console.log(data);
-
         this.room = data.room;
-        this.tableData = data.list;
         this.form = {
-          department: data.room[1].roomArea,
-          name: data.now_user.email,
+          // department: "",
+          name: data.now_user.username,
           mobile: data.now_user.mobile,
           belong: data.now_user.department,
+          // room:"",
+          // date1: "",
+          // date2: "",
+          // leader: "",
+          // sum: null,
+          // theme: [],
+          // note: "",
         };
-        console.log(this.room);
+         console.log(this.room);
       } else {
         this.$message.error(data.msg);
       }
@@ -180,20 +141,11 @@ export default {
     // 单元格的 style 的回调方法
     cellStyle({ row, column, rowIndex, columnIndex }) {
       if (columnIndex != 0)
-        return "border-radius: 15px;background-color:rgb(0, 215, 193);padding:0";
+        return "border-radius: 11px;background-color:rgb(0, 215, 193);padding:0";
     },
     clickhandle(row, column, event, cell) {
-      let a=row.date.split("-");
-      if(this.timesign==false)
-      {
-        this.form.date1=a[0];
-        this.form.date2=a[0];
-      }
-      console.log("行");
-      console.log(row);
-      console.log("列");
-      console.log(column);
-      console.log(column.key);
+      console.log(row[3]);
+      console.log(column.property);
     },
     // addIconClass({ row, column, rowIndex, columnIndex }) {
     //  if (columnIndex != 0)
@@ -211,12 +163,131 @@ export default {
 
   data() {
     return {
-      room: [],
-      tableData: [],
+      room: [
+        // {
+        //   title: "第一会议室",
+        //   sign: "1",
+        // },
+        // {
+        //   title: "第二会议室",
+        //   sign: "2",
+        // },
+        // {
+        //   title: "504会议室",
+        //   sign: "3",
+        // },
+        // {
+        //   title: "408会议室",
+        //   sign: "4",
+        // },
+        // {
+        //   title: "308会议室",
+        //   sign: "5",
+        // },
+        // {
+        //   title: "206会议室",
+        //   sign: "6",
+        // },
+        // {
+        //   title: "111会议室",
+        //   sign: "7",
+        // },
+        // {
+        //   title: "106会议室",
+        //   sign: "8",
+        // },
+      ],
+      tableData: [
+        {
+          date: "7:00-8:00",
+          1: 1,
+          2: 1,
+          3: 1,
+          4: 1,
+          5: 1,
+          6: 1,
+          7: 1,
+          8: 1,
+        },
+        {
+          date: "8:00-9:00",
+          1: 2,
+          2: 2,
+          3: 2,
+          4: 2,
+          5: 2,
+          6: 2,
+          7: 2,
+          8: 2,
+        },
+        {
+          date: "8:00-9:00",
+          1: 2,
+          2: 2,
+          3: 2,
+          4: 2,
+          5: 2,
+          6: 2,
+          7: 2,
+          8: 2,
+        },
+        {
+          date: "8:00-9:00",
+          1: 2,
+          2: 2,
+          3: 2,
+          4: 2,
+          5: 2,
+          6: 2,
+          7: 2,
+          8: 2,
+        },
+        {
+          date: "8:00-9:00",
+          1: 2,
+          2: 2,
+          3: 2,
+          4: 2,
+          5: 2,
+          6: 2,
+          7: 2,
+          8: 2,
+        },
+        {
+          date: "8:00-9:00",
+          1: 2,
+          2: 2,
+          3: 2,
+          4: 2,
+          5: 2,
+          6: 2,
+          7: 2,
+          8: 2,
+        },
+        {
+          date: "8:00-9:00",
+          1: 2,
+          2: 2,
+          3: 2,
+          4: 2,
+          5: 2,
+          6: 2,
+          7: 2,
+          8: 2,
+        },
+        {
+          date: "8:00-9:00",
+          1: 2,
+          2: 2,
+          3: 2,
+          4: 2,
+          5: 2,
+          6: 2,
+          7: 2,
+          8: 2,
+        },
+      ],
       form: {},
-      datevalue: "",
-      timesign:false,
-      timestart:"",
     };
   },
 };

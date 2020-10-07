@@ -43,7 +43,7 @@
               >
               <el-button
                 type="text"
-                class="iconfont icon-shexiangtou_guanbi"
+                :class="item.equipment >= '2'? 'iconfont icon-shexiangtou':'iconfont icon-shexiangtou_guanbi'"
                 style="
                   float: right;
                   font-size: 25px;
@@ -221,9 +221,11 @@ export default {
             },
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              console.log(data);
-              console.log(form);
-              console.log(this.form);
+              // console.log(data);
+              // console.log(form);
+              // console.log(this.form);
+              this.$message(data.msg);
+              this.$router.go(0);
             } else {
               this.$message.error(data.msg);
             }
@@ -411,7 +413,7 @@ export default {
     var validateSum = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请填写参会人数"));
-      } else if (value >this.roomsize) {
+      } else if (value > this.roomsize) {
         callback(new Error("参会人数超出上限"));
       } else {
         callback();

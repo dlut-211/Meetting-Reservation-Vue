@@ -1,35 +1,37 @@
 <template>
+<!-- fang's servicemeeting.vue
+2020-9-27 15:50 -->
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.key" placeholder="预约人姓名" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('generator:servicemeeting:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <!-- <el-button v-if="isAuth('generator:servicemeeting:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button> -->
         <el-button v-if="isAuth('generator:servicemeeting:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
       :data="dataList"
       border
-      stripe="true"
+      stripe
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
-      style="width: 100%;"
-      max-height="500">
+      style="width: 100%;" 
+      height="550">
       <el-table-column
         type="selection"
         header-align="center"
         align="center"
         width="50">
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         prop="orderId"
         header-align="center"
         align="center"
-        label="楼宇信息">
-      </el-table-column>
+        label="唯一标识">
+      </el-table-column> -->
       <el-table-column
         prop="department"
         header-align="center"
@@ -50,38 +52,40 @@
         label="预约人"
         width="70">
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         prop="roomDate"
         header-align="center"
         align="center"
         label="会议日期"
         width="100">
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         prop="startTime"
         header-align="center"
         align="center"
-        label="会议开始时间">
+        label="开始时间"
+        width="102">
       </el-table-column>
       <el-table-column
         prop="endTime"
         header-align="center"
         align="center"
-        label="会议结束时间">
+        label="结束时间"
+        width="102">
       </el-table-column>
       <el-table-column
         prop="meetingTheme"
         header-align="center"
         align="center"
         label="会议主题"
-        width="200">
+        width="150">
       </el-table-column>
       <el-table-column
         prop="leader"
         header-align="center"
         align="center"
         label="参会校领导"
-        width="100">
+        width="92">
       </el-table-column>
       <el-table-column
         prop="headCount"
@@ -89,24 +93,39 @@
         align="center"
         label="参会人数">
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         prop="equipment"
         header-align="center"
         align="center"
-        label="会场准备">
-      </el-table-column>
+        label="设备状态"
+        width="120">
+         <template slot-scope="scope">
+          <span v-if="scope.row.equipment==0">无设备</span>
+          <span v-else-if="scope.row.equipment==1">麦克风</span>
+          <span v-else-if="scope.row.equipment==2">投影仪</span>
+          <span v-else>麦克风，投影仪</span>
+         </template>
+      </el-table-column> -->
       <el-table-column
         prop="remark"
         header-align="center"
         align="center"
         label="备注"
-        width="50">
+        width="150">
+        <template slot-scope="scope">
+          <span v-if="scope.row.remark==null">无</span>
+          <span v-else>{{scope.row.remark}}</span>
+        </template>
       </el-table-column>
       <el-table-column
         prop="status"
         header-align="center"
         align="center"
         label="预约状态">
+         <template slot-scope="scope">
+          <span v-if="scope.row.status==0">已成功</span>
+          <span v-else-if="scope.row.status==1">已取消</span>
+         </template>
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -115,7 +134,7 @@
         width="50"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.orderId)">修改</el-button>
+          <!-- <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.orderId)">修改</el-button> -->
           <el-button type="text" size="small" @click="deleteHandle(scope.row.orderId)">删除</el-button>
         </template>
       </el-table-column>
@@ -143,156 +162,7 @@
         dataForm: {
           key: ''
         },
-        dataList: [{
-          orderId:'1',
-          department:'软件学院',
-          roomName:'四楼会议室412',
-          roomUser:'方轶',
-          roomDate:'2020-10-01',
-          startTime:'10:00',
-          endTime:'11:00',
-          meetingTheme:'华为公司合作交流会',
-          leader:'罗钟铉',
-          headCount:'15',
-          equipment:'投影仪',
-          remark:'无',
-          status:'通过'
-        },
-        {
-          orderId:'2',
-          department:'软件学院',
-          roomName:'四楼会议室412',
-          roomUser:'方轶',
-          roomDate:'2020-10-01',
-          startTime:'10:00',
-          endTime:'11:00',
-          meetingTheme:'华为公司合作交流会',
-          leader:'罗钟铉',
-          headCount:'15',
-          equipment:'投影仪',
-          remark:'无',
-          status:'通过'
-        },
-        {
-          orderId:'3',
-          department:'软件学院',
-          roomName:'四楼会议室412',
-          roomUser:'方轶',
-          roomDate:'2020-10-01',
-          startTime:'10:00',
-          endTime:'11:00',
-          meetingTheme:'华为公司合作交流会',
-          leader:'罗钟铉',
-          headCount:'15',
-          equipment:'投影仪',
-          remark:'无',
-          status:'通过'
-        },
-        {
-          orderId:'4',
-          department:'软件学院',
-          roomName:'四楼会议室412',
-          roomUser:'方轶',
-          roomDate:'2020-10-01',
-          startTime:'10:00',
-          endTime:'11:00',
-          meetingTheme:'华为公司合作交流会',
-          leader:'罗钟铉',
-          headCount:'15',
-          equipment:'投影仪',
-          remark:'无',
-          status:'通过'
-        },
-        {
-          orderId:'5',
-          department:'软件学院',
-          roomName:'四楼会议室412',
-          roomUser:'方轶',
-          roomDate:'2020-10-01',
-          startTime:'10:00',
-          endTime:'11:00',
-          meetingTheme:'华为公司合作交流会',
-          leader:'罗钟铉',
-          headCount:'15',
-          equipment:'投影仪',
-          remark:'无',
-          status:'通过'
-        },
-        {
-          orderId:'6',
-          department:'软件学院',
-          roomName:'四楼会议室412',
-          roomUser:'方轶',
-          roomDate:'2020-10-01',
-          startTime:'10:00',
-          endTime:'11:00',
-          meetingTheme:'华为公司合作交流会',
-          leader:'罗钟铉',
-          headCount:'15',
-          equipment:'投影仪',
-          remark:'无',
-          status:'通过'
-        },
-        {
-          orderId:'7',
-          department:'软件学院',
-          roomName:'四楼会议室412',
-          roomUser:'方轶',
-          roomDate:'2020-10-01',
-          startTime:'10:00',
-          endTime:'11:00',
-          meetingTheme:'华为公司合作交流会',
-          leader:'罗钟铉',
-          headCount:'15',
-          equipment:'投影仪',
-          remark:'无',
-          status:'通过'
-        },
-        {
-          orderId:'8',
-          department:'软件学院',
-          roomName:'四楼会议室412',
-          roomUser:'方轶',
-          roomDate:'2020-10-01',
-          startTime:'10:00',
-          endTime:'11:00',
-          meetingTheme:'华为公司合作交流会',
-          leader:'罗钟铉',
-          headCount:'15',
-          equipment:'投影仪',
-          remark:'无',
-          status:'通过'
-        },
-        {
-          orderId:'9',
-          department:'软件学院',
-          roomName:'四楼会议室412',
-          roomUser:'方轶',
-          roomDate:'2020-10-01',
-          startTime:'10:00',
-          endTime:'11:00',
-          meetingTheme:'华为公司合作交流会',
-          leader:'罗钟铉',
-          headCount:'15',
-          equipment:'投影仪',
-          remark:'无',
-          status:'通过'
-        },
-        {
-          orderId:'10',
-          department:'软件学院',
-          roomName:'四楼会议室412',
-          roomUser:'方轶',
-          roomDate:'2020-10-01',
-          startTime:'10:00',
-          endTime:'11:00',
-          meetingTheme:'华为公司合作交流会',
-          leader:'罗钟铉',
-          headCount:'15',
-          equipment:'投影仪',
-          remark:'无',
-          status:'通过'
-        }],
+        dataList: [],
         pageIndex: 1,
         pageSize: 10,
         totalPage: 0,
@@ -317,11 +187,14 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
+            //key为查询字段
             'key': this.dataForm.key
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
+            console.log(data);
             this.dataList = data.page.list
+            this.dataList.orderId = null
             this.totalPage = data.page.totalCount
           } else {
             this.dataList = []
@@ -346,18 +219,18 @@
         this.dataListSelections = val
       },
       // 新增 / 修改
-      addOrUpdateHandle (id) {
-        this.addOrUpdateVisible = true
-        this.$nextTick(() => {
-          this.$refs.addOrUpdate.init(id)
-        })
-      },
+      // addOrUpdateHandle (id) {
+      //   this.addOrUpdateVisible = true
+      //   this.$nextTick(() => {
+      //     this.$refs.addOrUpdate.init(id)
+      //   })
+      // },
       // 删除
       deleteHandle (id) {
         var ids = id ? [id] : this.dataListSelections.map(item => {
           return item.orderId
         })
-        this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
+        this.$confirm(`确定进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
