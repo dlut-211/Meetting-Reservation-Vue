@@ -14,11 +14,7 @@ module.exports = {
     // 代理列表, 是否开启代理通过[./dev.env.js]配置
     proxyTable: devEnv.OPEN_PROXY === false ? {} : {
       '/proxyApi': {
-<<<<<<< Updated upstream
-        target: 'http://demo.renren.io/renren-fast/',
-=======
         target: 'http://47.100.200.116:8008/renren-fast/',
->>>>>>> Stashed changes
         changeOrigin: true,
         pathRewrite: {
           '^/proxyApi': '/'

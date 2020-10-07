@@ -6,7 +6,7 @@
 
   // api接口请求地址
   // window.SITE_CONFIG['baseUrl'] = 'http://demo.open.renren.io/renren-fast-server';
-  window.SITE_CONFIG['baseUrl'] = 'http://47.100.200.116:8008/renren-fast';
+  window.SITE_CONFIG['baseUrl'] = 'http://47.100.200.116:8001/renren-fast';
 
   // cdn地址 = 域名 + 版本号
   window.SITE_CONFIG['domain']  = './'; // 域名
