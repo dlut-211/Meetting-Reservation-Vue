@@ -16,6 +16,7 @@
       :data="dataList"
       border
       stripe
+      sortable
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
       style="width: 100%;" 
@@ -42,15 +43,19 @@
         prop="roomName"
         header-align="center"
         align="center"
-        label="会议室"
-        width="180">
+        label="会议室名称">
       </el-table-column>
       <el-table-column
         prop="roomUser"
         header-align="center"
         align="center"
-        label="预约人"
-        width="70">
+        label="预约人">
+      </el-table-column>
+      <el-table-column
+        prop="number"
+        header-align="center"
+        align="center"
+        label="联系方式">
       </el-table-column>
       <!-- <el-table-column
         prop="roomDate"
@@ -63,28 +68,26 @@
         prop="startTime"
         header-align="center"
         align="center"
-        label="开始时间"
-        width="102">
+        label="开始时间">
       </el-table-column>
       <el-table-column
         prop="endTime"
         header-align="center"
         align="center"
-        label="结束时间"
-        width="102">
+        label="结束时间">
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         prop="meetingTheme"
         header-align="center"
         align="center"
         label="会议主题"
         width="150">
-      </el-table-column>
-      <el-table-column
+      </el-table-column> -->
+      <!-- <el-table-column
         prop="leader"
         header-align="center"
         align="center"
-        label="参会校领导"
+        label="参会人员"
         width="92">
       </el-table-column>
       <el-table-column
@@ -92,7 +95,7 @@
         header-align="center"
         align="center"
         label="参会人数">
-      </el-table-column>
+      </el-table-column> -->
       <!-- <el-table-column
         prop="equipment"
         header-align="center"
@@ -106,7 +109,7 @@
           <span v-else>麦克风，投影仪</span>
          </template>
       </el-table-column> -->
-      <el-table-column
+      <!-- <el-table-column
         prop="remark"
         header-align="center"
         align="center"
@@ -116,7 +119,7 @@
           <span v-if="scope.row.remark==null">无</span>
           <span v-else>{{scope.row.remark}}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         prop="status"
         header-align="center"
@@ -131,10 +134,26 @@
         fixed="right"
         header-align="center"
         align="center"
-        width="50"
+        width="120"
         label="操作">
         <template slot-scope="scope">
-          <!-- <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.orderId)">修改</el-button> -->
+          <el-popover
+            placement="top-start"
+            width="400"
+            trigger="click">
+            <el-table :data="details">
+              <el-table-column prop="meetingTheme" label="会议主题"></el-table-column>
+              <el-table-column prop="leader" label="参会人员"></el-table-column>
+              <el-table-column prop="headCount" label="参会人数"></el-table-column>
+              <el-table-column prop="remark" label="备注">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.remark==null">无</span>
+                  <span v-else>{{scope.row.remark}}</span>
+                </template>
+              </el-table-column> 
+            </el-table>      
+            <el-button type="text" slot="reference" @click="detailsClick(scope.row.orderId)" >详情</el-button>
+          </el-popover>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.orderId)">删除</el-button>
         </template>
       </el-table-column>
@@ -163,6 +182,8 @@
           key: ''
         },
         dataList: [],
+        // listwithphone: [],
+        details: [],
         pageIndex: 1,
         pageSize: 10,
         totalPage: 0,
@@ -225,6 +246,16 @@
       //     this.$refs.addOrUpdate.init(id)
       //   })
       // },
+      
+      //详情信息
+      detailsClick (id) {
+        this.details = []
+        for(let item of this.dataList){        
+          if(item.orderId == id){
+            this.details.push(item)
+          }
+        }
+       },
       // 删除
       deleteHandle (id) {
         var ids = id ? [id] : this.dataListSelections.map(item => {

@@ -34,7 +34,7 @@
         prop="roomName"
         header-align="center"
         align="center"
-        label="会议室">
+        label="会议室名称">
       </el-table-column>
       <el-table-column
         prop="location"
@@ -46,7 +46,7 @@
         prop="equipment"
         header-align="center"
         align="center"
-        label="设备状态">
+        label="设备">
         <template slot-scope="scope">
           <span v-if="scope.row.equipment==0">无设备</span>
           <span v-else-if="scope.row.equipment==1">麦克风</span>
@@ -64,7 +64,7 @@
         prop="roomArea"
         header-align="center"
         align="center"
-        label="所属校区">
+        label="所属区域">
       </el-table-column>
       <el-table-column
         fixed="right"
