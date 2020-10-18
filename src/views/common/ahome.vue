@@ -24,9 +24,26 @@
           v-for="(item, index) in room"
           :key="index"
           :label="item.roomName"
+          
           width="100"
         >
-          <template slot-scope="scope">
+          <template slot-scope="scope">           
+            <el-popover trigger="click" placement="top" @hide="close">
+              <el-table :data="details">
+              <el-table-column width="150" property="department" label="使用单位"></el-table-column>
+              <el-table-column width="150" property="roomUser" label="预约人"></el-table-column>
+              <el-table-column width="150" property="" label="联系方式"></el-table-column>
+              <el-table-column width="150" property="meetingTheme" label="会议主题"></el-table-column>
+              <el-table-column width="150" property="leader" label="参会人员"></el-table-column>
+              <el-table-column width="150" property="headCount" label="参会人数"></el-table-column>
+              <el-table-column width="150" property="remark" label="备注">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.remark==null">无</span>
+                  <span v-else>{{scope.row.remark}}</span> 
+                </template>
+                </el-table-column>          
+            </el-table>
+            <div slot="reference">
             <el-button
               type="text"
               style="
@@ -34,11 +51,12 @@
                 font-size: 18px;
                 margin-left: 10%;
                 color: white;
-
                 line-height: 25px;
               "
+             
               >{{ item.capacity }}</el-button
             >
+            
             <el-button
               type="text"
               :class="
@@ -52,7 +70,10 @@
                 margin-right: 10%;
                 color: #686868;
               "
+          
             ></el-button>
+            </div>
+            </el-popover>
           </template>
           <!-- <span style="float:left" class="iconfont icon-mic"></span>
             <span  style="float:right" class="iconfonticon-shexiangtou_guanbi"></span>-->
@@ -133,6 +154,10 @@ export default {
       this.datevalue = defaultDate;
     },
 
+    close() {
+      this.details=[];
+
+    },
     resetchose() {
       this.timesign = false;
       this.timestart = "";
@@ -189,16 +214,16 @@ export default {
     },
     clickhandle(row, column, event, cell) {
       let a = row.date.split("-");
-      console.log("日期");
-      console.log(this.datevalue);
-      console.log("开始时间");
-      console.log(a[0]);
-      console.log("结束时间");
-      console.log(a[1]);
-      console.log("行");
-      console.log(row);
-      console.log("列");
-      console.log(column);
+      // console.log("日期");
+      // console.log(this.datevalue);
+      // console.log("开始时间");
+      // console.log(a[0]);
+      // console.log("结束时间");
+      // console.log(a[1]);
+      // console.log("行");
+      // console.log(row);
+      // console.log("列");
+      // console.log(column);
 
       this.$http({
         url: this.$http.adornUrl("/generator/servicemeeting/atableget"),
@@ -214,10 +239,13 @@ export default {
           "Content-Type": "application/json",
         },
       }).then(({ data }) => {
+        this.details=[];
         if (data && data.code === 0) {
           if (data !== null) {
             //有数据时
-            console.log(data);
+          
+            this.details.push(data.date);
+            console.log(data.date);
           } else {
             //无数据时
           }
@@ -243,6 +271,7 @@ export default {
   data() {
     return {
       room: [],
+      details: [],
       roomsize: "",
       tableData: [],
       form: {},
