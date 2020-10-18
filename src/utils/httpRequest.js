@@ -47,7 +47,7 @@ http.adornUrl = (actionName) => {
 
 /**
  * get请求参数处理
- * @param {*} params 参数对象
+ 
  * @param {*} openDefultParams 是否开启默认参数?
  */
 http.adornParams = (params = {}, openDefultParams = true) => {
