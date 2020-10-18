@@ -162,7 +162,7 @@ export default {
       console.log(this.timestart);
       //console.log(rowIndex);
       if (columnIndex != 0 && this.timesign == true) {
-        //this.context();
+        this.context();
         if (
           this.timeend != "" &&
           column.label == this.roomsign &&
@@ -170,8 +170,8 @@ export default {
           rowIndex <= Number(this.timeend - 8) &&
           this.bechosed == true
         ) {
-          //console.log("进入if");
-          //this.context();
+          console.log("进入if");
+          this.context();
           return "border-radius: 15px;background-color:#409EFF;color:white;padding:0";
         }
 
@@ -179,8 +179,8 @@ export default {
           column.label == this.roomsign &&
           rowIndex == Number(this.timestart - 7)
         ) {
-          //console.log("进入else");
-          //this.context();
+          console.log("进入else");
+          this.context();
           return "border-radius: 15px;background-color:#409EFF;color:white;padding:0";
         }
       }
@@ -189,42 +189,28 @@ export default {
     },
     clickhandle(row, column, event, cell) {
       let a = row.date.split("-");
-      console.log("日期");
-      console.log(this.datevalue);
-      console.log("开始时间");
-      console.log(a[0]);
-      console.log("结束时间");
-      console.log(a[1]);
+      console.log("点击事件");
+      // console.log(column);
+      // for (let i = 0; i < this.room.length; i++)
+      //   if (this.room[i].roomName == column.label)
+      //     this.roomsize = this.room[i].capacity;
+      // if (this.timesign == false) {
+      //   this.form.room = column.label;
+      //   this.roomsign = column.label;
+      //   this.form.date1 = a[0];
+      //   this.timestart = a[0].split(":")[0];
+      //   this.timeend = "";
+      //   this.form.date2 = a[1];
+      //   this.timesign = true;
+      //   // this.context();
+      //   // console.log(this.timestart);
+      // }
+
       console.log("行");
       console.log(row);
       console.log("列");
       console.log(column);
-
-      this.$http({
-        url: this.$http.adornUrl("/generator/servicemeeting/atableget"),
-        method: "post",
-        data: {
-          date: this.datevalue,
-          starttime: a[0],
-          endtime: a[1],
-          room: column.label,
-        },
-        // 设置请求头
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then(({ data }) => {
-        if (data && data.code === 0) {
-          if (data !== null) {
-            //有数据时
-            console.log(data);
-          } else {
-            //无数据时
-          }
-        } else {
-          this.$message.error(data.msg);
-        }
-      });
+      // console.log();
     },
     // addIconClass({ row, column, rowIndex, columnIndex }) {
     //  if (columnIndex != 0)

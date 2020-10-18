@@ -214,13 +214,9 @@ export default {
           "Content-Type": "application/json",
         },
       }).then(({ data }) => {
+          console.log(data);
         if (data && data.code === 0) {
-          if (data !== null) {
-            //有数据时
-            console.log(data);
-          } else {
-            //无数据时
-          }
+          console.log(data); 
         } else {
           this.$message.error(data.msg);
         }
