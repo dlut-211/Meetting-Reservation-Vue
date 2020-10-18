@@ -10,9 +10,23 @@
     <el-form-item label="会议室地点" prop="location">
       <el-input v-model="dataForm.location" placeholder="会议室地点"></el-input>
     </el-form-item>
+<!-- 
     <el-form-item label="设备状态" prop="equipment">
       <el-input v-model="dataForm.equipment" placeholder="状态（0:无设备，1:麦克风，2:投影仪，3:都有）"></el-input>
-    </el-form-item>
+    </el-form-item> -->
+    
+<el-form-item label="设备状态" prop="equipment">
+  <el-select  v-model="dataForm.equipment" placeholder="请选择">
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value">
+    </el-option>
+  </el-select>
+</el-form-item>
+
+
     <el-form-item label="容纳人数" prop="capacity">
       <el-input v-model="dataForm.capacity" placeholder="容纳人数"></el-input>
     </el-form-item>
@@ -31,6 +45,20 @@
   export default {
     data () {
       return {
+         options: [{
+          value: 0,
+          label: '无设备'
+        }, {
+          value: 1,
+          label: '麦克风'
+        }, {
+          value: 2,
+          label: '投影仪'
+        }, {
+          value: 3,
+          label: '麦克风+投影仪'
+        }],
+        value: '',
         visible: false,
         dataForm: {
           roomId: 0,

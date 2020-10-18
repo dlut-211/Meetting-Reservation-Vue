@@ -197,7 +197,6 @@ export default {
       this.$refs[form].validate((valid) => {
         if (valid) {
           console.log("submit!");
-
           this.$http({
             url: this.$http.adornUrl("/generator/servicemeeting/formsubmit"),
             method: "post",
@@ -225,7 +224,7 @@ export default {
               // console.log(form);
               // console.log(this.form);
               this.$message(data.msg);
-              this.$router.go(0);
+               this.$router.replace({path: '/generator-user_servicemeeting'});
             } else {
               this.$message.error(data.msg);
             }
