@@ -250,7 +250,7 @@ export default {
           this.dataList = data.page.list;
           console.log(this.dataList);
           this.dataList.reverse();
-          console.log(this.dataList);
+          console.log(this.dataList.reverse());
           this.dataList.orderId = null;
           this.totalPage = data.page.totalCount;
         } else {

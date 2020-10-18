@@ -5,8 +5,7 @@
     <el-form
       :inline="true"
       :model="dataForm"
-      @keyup.enter.native="getDataList()"
-    >
+      @keyup.enter.native="getDataList()">
       <!-- <el-form-item>
         <el-input v-model="dataForm.key" placeholder="会议室名称" clearable></el-input>
       </el-form-item> -->
@@ -17,9 +16,7 @@
           v-if="isAuth('generator:servicemeeting:delete')"
           type="danger"
           @click="deleteHandle()"
-          :disabled="dataListSelections.length <= 0"
-          >批量删除</el-button
-        >
+          :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -29,14 +26,12 @@
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
       style="width: 100%"
-      height="550"
-    >
+      height="550">
       <el-table-column
         type="selection"
         header-align="center"
         align="center"
-        width="50"
-      >
+        width="50">
       </el-table-column>
       <!-- <el-table-column
         prop="orderId"
@@ -48,22 +43,19 @@
         prop="department"
         header-align="center"
         align="center"
-        label="使用单位"
-      >
+        label="使用单位">
       </el-table-column>
       <el-table-column
         prop="roomName"
         header-align="center"
         align="center"
-        label="会议室"
-      >
+        label="会议室">
       </el-table-column>
       <el-table-column
         prop="roomUser"
         header-align="center"
         align="center"
-        label="预约人"
-      >
+        label="预约人">
       </el-table-column>
       <!-- <el-table-column
         prop="roomDate"
@@ -76,15 +68,13 @@
         prop="startTime"
         header-align="center"
         align="center"
-        label="开始时间"
-      >
+        label="开始时间">
       </el-table-column>
       <el-table-column
         prop="endTime"
         header-align="center"
         align="center"
-        label="结束时间"
-      >
+        label="结束时间">
       </el-table-column>
       <!-- <el-table-column
         prop="meetingTheme"
@@ -134,13 +124,10 @@
         prop="status"
         header-align="center"
         align="center"
-        label="预约状态"
-      >
+        label="预约状态">
         <template slot-scope="scope">
-           <span v-if="scope.row.status == 0">已成功</span>  <span
-            v-else-if="scope.row.status == 1"
-            >已取消</span
-          >
+           <span v-if="scope.row.status == 0">已成功</span>
+           <span v-else-if="scope.row.status == 1">已取消</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -148,41 +135,26 @@
         header-align="center"
         align="center"
         width="120"
-        label="操作"
-      >
-        <template slot-scope="scope">
-          <el-popover placement="top-start" width="400" trigger="click">
+        label="操作">
+       <template slot-scope="scope">
+          <el-popover
+            placement="top-start"
+            width="400"
+            trigger="click">
             <el-table :data="details">
-              <el-table-column
-                prop="meetingTheme"
-                label="会议主题"
-              ></el-table-column>
+              <el-table-column prop="meetingTheme" label="会议主题"></el-table-column>
               <el-table-column prop="leader" label="参会人员"></el-table-column>
-              <el-table-column
-                prop="headCount"
-                label="参会人数"
-              ></el-table-column>
+              <el-table-column prop="headCount" label="参会人数"></el-table-column>
               <el-table-column prop="remark" label="备注">
-                <template slot-scope="scope">
-                            <span v-if="scope.row.remark == null">无</span>
-                  <span v-else>{{ scope.row.remark }}</span>
-                          </template
-                >
-              </el-table-column>
-            </el-table>
-            <el-button
-              type="text"
-              slot="reference"
-              @click="detailsClick(scope.row.orderId)"
-              >详情</el-button
-            >
+                <template slot-scope="scope">
+                  <span v-if="scope.row.remark==null">无</span>
+                  <span v-else>{{scope.row.remark}}</span>
+                </template>
+              </el-table-column> 
+            </el-table>      
+            <el-button type="text" slot="reference" @click="detailsClick(scope.row.orderId)" >详情</el-button>
           </el-popover>
-          <el-button
-            type="text"
-            size="small"
-            @click="deleteHandle(scope.row.orderId)"
-            >删除</el-button
-          >
+          <el-button type="text" size="small" @click="deleteHandle(scope.row.orderId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -194,15 +166,13 @@
       :page-sizes="[10, 20, 50, 100]"
       :page-size="pageSize"
       :total="totalPage"
-      layout="total, sizes, prev, pager, next, jumper"
-    >
+      layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update
       v-if="addOrUpdateVisible"
       ref="addOrUpdate"
-      @refreshDataList="getDataList"
-    ></add-or-update>
+      @refreshDataList="getDataList"></add-or-update>
   </div>
 </template>
 
@@ -222,6 +192,7 @@ export default {
       dataListLoading: false,
       dataListSelections: [],
       addOrUpdateVisible: false,
+    
     };
   },
   components: {
@@ -248,9 +219,6 @@ export default {
         if (data && data.code === 0) {
           console.log(data);
           this.dataList = data.page.list;
-          console.log(this.dataList);
-          this.dataList.reverse();
-          console.log(this.dataList);
           this.dataList.orderId = null;
           this.totalPage = data.page.totalCount;
         } else {
@@ -282,15 +250,15 @@ export default {
     //     this.$refs.addOrUpdate.init(id)
     //   })
     // },
-    //详情信息
-    detailsClick(id) {
-      this.details = [];
-      for (let item of this.dataList) {
-        if (item.orderId == id) {
-          this.details.push(item);
+     //详情信息
+      detailsClick (id) {
+        this.details = []
+        for(let item of this.dataList){        
+          if(item.orderId == id){
+            this.details.push(item)
+          }
         }
-      }
-    },
+       },
     // 删除
     deleteHandle(id) {
       var ids = id

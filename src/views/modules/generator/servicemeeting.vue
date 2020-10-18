@@ -261,6 +261,7 @@ export default {
           console.log(data);
           this.dataList = data.page.list;
           this.listwithphone = data.listwithphone;
+          this.listwithphone.reverse();
           this.dataList.orderId = null;
           this.totalPage = data.page.totalCount;
         } else {
