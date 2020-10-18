@@ -191,7 +191,7 @@
           <el-button
             type="text"
             size="small"
-            @click="deleteHandle(scope.row.item.orderId)"
+            @click="deleteHandle(scope.row.orderId)"
             >删除</el-button
           >
         </template>

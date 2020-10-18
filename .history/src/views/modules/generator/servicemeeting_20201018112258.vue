@@ -57,14 +57,14 @@
       >
       </el-table-column>
       <el-table-column
-        prop="item.roomName"
+        prop="roomName"
         header-align="center"
         align="center"
         label="会议室名称"
       >
       </el-table-column>
       <el-table-column
-        prop="item.roomUser"
+        prop="roomUser"
         header-align="center"
         align="center"
         label="预约人"
@@ -85,14 +85,14 @@
         width="100">
       </el-table-column> -->
       <el-table-column
-        prop="item.startTime"
+        prop="startTime"
         header-align="center"
         align="center"
         label="开始时间"
       >
       </el-table-column>
       <el-table-column
-        prop="item.endTime"
+        prop="endTime"
         header-align="center"
         align="center"
         label="结束时间"
@@ -143,14 +143,14 @@
         </template>
       </el-table-column> -->
       <el-table-column
-        prop="item.status"
+        prop="status"
         header-align="center"
         align="center"
         label="预约状态"
       >
          <template slot-scope="scope">
-                    <span v-if="scope.row.item.status == 0">已成功</span>
-                    <span v-else-if="scope.row.item.status == 1">已取消</span>
+                    <span v-if="scope.row.status == 0">已成功</span>
+                    <span v-else-if="scope.row.status == 1">已取消</span>
                    </template
         >
       </el-table-column>
@@ -184,14 +184,14 @@
             <el-button
               type="text"
               slot="reference"
-              @click="detailsClick(scope.row.item.orderId)"
+              @click="detailsClick(scope.row.orderId)"
               >详情</el-button
             >
           </el-popover>
           <el-button
             type="text"
             size="small"
-            @click="deleteHandle(scope.row.item.orderId)"
+            @click="deleteHandle(scope.row.orderId)"
             >删除</el-button
           >
         </template>

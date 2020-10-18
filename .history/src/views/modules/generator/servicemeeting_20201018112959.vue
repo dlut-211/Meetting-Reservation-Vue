@@ -184,14 +184,14 @@
             <el-button
               type="text"
               slot="reference"
-              @click="detailsClick(scope.row.item.orderId)"
+              @click="detailsClick(scope.row.orderId)"
               >详情</el-button
             >
           </el-popover>
           <el-button
             type="text"
             size="small"
-            @click="deleteHandle(scope.row.item.orderId)"
+            @click="deleteHandle(scope.row.orderId)"
             >删除</el-button
           >
         </template>

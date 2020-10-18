@@ -149,8 +149,8 @@
         label="预约状态"
       >
          <template slot-scope="scope">
-                    <span v-if="scope.row.item.status == 0">已成功</span>
-                    <span v-else-if="scope.row.item.status == 1">已取消</span>
+                    <span v-if="scope.row.status == 0">已成功</span>
+                    <span v-else-if="scope.row.status == 1">已取消</span>
                    </template
         >
       </el-table-column>
@@ -184,14 +184,14 @@
             <el-button
               type="text"
               slot="reference"
-              @click="detailsClick(scope.row.item.orderId)"
+              @click="detailsClick(scope.row.orderId)"
               >详情</el-button
             >
           </el-popover>
           <el-button
             type="text"
             size="small"
-            @click="deleteHandle(scope.row.item.orderId)"
+            @click="deleteHandle(scope.row.orderId)"
             >删除</el-button
           >
         </template>
