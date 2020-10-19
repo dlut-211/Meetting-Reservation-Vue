@@ -7,7 +7,7 @@
           <p class="brand-info__intro">会议预约系统为大连理工大学的教师提供方便快捷的会议预约服务，界面简洁，一约即成。</p>
         </div>
         <div class="login-main">
-          <h3 class="login-title">管理员登录</h3>
+          <h3 class="login-title">教师登录</h3>
           <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" status-icon>
             <el-form-item prop="userName">
               <el-input v-model="dataForm.userName" placeholder="帐号"></el-input>

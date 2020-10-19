@@ -30,8 +30,8 @@
     <el-form-item label="容纳人数" prop="capacity">
       <el-input v-model="dataForm.capacity" placeholder="容纳人数"></el-input>
     </el-form-item>
-    <el-form-item label="所属校区" prop="roomArea">
-      <el-input v-model="dataForm.roomArea" placeholder="所属校区"></el-input>
+    <el-form-item label="所属区域" prop="roomArea">
+      <el-input v-model="dataForm.roomArea" placeholder="所属区域"></el-input>
     </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
