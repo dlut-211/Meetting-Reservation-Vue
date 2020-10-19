@@ -248,9 +248,7 @@ export default {
         if (data && data.code === 0) {
           console.log(data);
           this.dataList = data.page.list;
-          console.log(this.dataList);
           this.dataList.reverse();
-          console.log(this.dataList);
           this.dataList.orderId = null;
           this.totalPage = data.page.totalCount;
         } else {
