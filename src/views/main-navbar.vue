@@ -86,9 +86,11 @@
       jumpHomepage() {
         // console.log(this.$cookie.get('username'))
         if(this.$cookie.get('username')=='root') {
-          this.$router.push({ name: 'ahome' })
+          //管理员跳转到管理员首页（预约记录）
+          this.$router.push({ name: 'generator-servicemeeting' })
         }else{
-          this.$router.push({ name: 'home' })
+          //教师跳转到教师首页（预约历史）
+          this.$router.push({ name: 'generator-user_servicemeeting' })
         }
       },
       // 修改密码

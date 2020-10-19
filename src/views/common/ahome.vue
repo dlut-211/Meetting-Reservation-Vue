@@ -1,5 +1,3 @@
-
-
 <template>
   <div>
     <el-row>
@@ -27,52 +25,65 @@
           
           width="100"
         >
+        <!-- 预约详情弹出框 -->
           <template slot-scope="scope">           
-            <el-popover trigger="click" placement="top" @hide="close">
-              <el-table :data="details">
-              <el-table-column width="150" property="department" label="使用单位"></el-table-column>
-              <el-table-column width="150" property="roomUser" label="预约人"></el-table-column>
-              <el-table-column width="150" property="" label="联系方式"></el-table-column>
-              <el-table-column width="150" property="meetingTheme" label="会议主题"></el-table-column>
-              <el-table-column width="150" property="leader" label="参会人员"></el-table-column>
-              <el-table-column width="150" property="headCount" label="参会人数"></el-table-column>
-              <el-table-column width="150" property="remark" label="备注">
-                <template slot-scope="scope">
-                  <span v-if="scope.row.remark==null">无</span>
-                  <span v-else>{{scope.row.remark}}</span> 
-                </template>
-                </el-table-column>          
-            </el-table>
-            <div slot="reference">
-            <el-button
-              type="text"
-              style="
-                float: left;
-                font-size: 18px;
-                margin-left: 10%;
-                color: white;
-                line-height: 25px;
-              "
-             
-              >{{ item.capacity }}</el-button
-            >
-            
-            <el-button
-              type="text"
-              :class="
-                item.equipment >= '2'
-                  ? 'iconfont icon-shexiangtou'
-                  : 'iconfont icon-shexiangtou_guanbi'
-              "
-              style="
-                float: right;
-                font-size: 25px;
-                margin-right: 10%;
-                color: #686868;
-              "
-          
-            ></el-button>
-            </div>
+            <el-popover trigger="manual" placement="right" @hide="close" v-model="visible">
+              <el-form ref="form" :model="details" label-width="80px">
+                <el-form-item label="使用单位">
+                  <el-input v-model="details.department"></el-input>
+                </el-form-item>
+                <el-form-item label="预约人">
+                  <el-input v-model="details.roomUser"></el-input>
+                </el-form-item>
+                <el-form-item label="联系方式">
+                  <el-input v-model="details.mobile"></el-input>
+                </el-form-item>
+                <el-form-item label="会议主题">
+                  <el-input v-model="details.meetingTheme"></el-input>
+                </el-form-item>
+                <el-form-item label="参会人员">
+                  <el-input v-model="details.leader"></el-input>
+                </el-form-item>
+                <el-form-item label="备注">
+                  <template>
+                    <el-form-item v-if="details.remark==null">
+                      <el-input value="无"></el-input>
+                    </el-form-item>
+                    <el-form-item v-else>
+                      <el-input v-model="details.remark"></el-input>
+                    </el-form-item>
+                  </template>
+                </el-form-item>
+              </el-form>
+              <div slot="reference">
+                <el-button
+                  type="text"
+                  style="
+                    float: left;
+                    font-size: 18px;
+                    margin-left: 10%;
+                    color: white;
+                    line-height: 25px;
+                  "
+                
+                  >{{ item.capacity }}</el-button
+                >             
+                <el-button
+                  type="text"
+                  :class="
+                    item.equipment >= '2'
+                      ? 'iconfont icon-shexiangtou'
+                      : 'iconfont icon-shexiangtou_guanbi'
+                  "
+                  style="
+                    float: right;
+                    font-size: 25px;
+                    margin-right: 10%;
+                    color: #686868;
+                  "
+              
+                ></el-button>
+              </div>
             </el-popover>
           </template>
           <!-- <span style="float:left" class="iconfont icon-mic"></span>
@@ -90,6 +101,7 @@ export default {
   },
   mounted() {
     this.getTanleMsg();
+    this.getChosenList();
   },
   methods: {
     getTanleMsg() {
@@ -213,45 +225,89 @@ export default {
         return "border-radius: 15px;background-color:rgb(0, 215, 193);padding:0";
     },
     clickhandle(row, column, event, cell) {
-      let a = row.date.split("-");
-      // console.log("日期");
-      // console.log(this.datevalue);
-      // console.log("开始时间");
-      // console.log(a[0]);
-      // console.log("结束时间");
-      // console.log(a[1]);
-      // console.log("行");
-      // console.log(row);
-      // console.log("列");
-      // console.log(column);
-
-      this.$http({
-        url: this.$http.adornUrl("/generator/servicemeeting/atableget"),
-        method: "post",
-        data: {
-          date: this.datevalue,
-          starttime: a[0],
-          endtime: a[1],
-          room: column.label,
-        },
-        // 设置请求头
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then(({ data }) => {
-        this.details=[];
-        if (data && data.code === 0) {
-          if (data !== null) {
-            //有数据时
-          
-            this.details.push(data.date);
-            console.log(data.date);
-          } else {
-            //无数据时
+      let a = row.date.split("-");//选中的单元格
+      let b = this.choseList;//当前页面所有被预约的单元格
+      for(let i = 0; i < b.length; i++){
+        let time1 = b[i].item.startTime.split(' ');//开始时间
+        let time2 = b[i].item.endTime.split(' ');//结束时间
+        if(
+          b[i].item.roomName == column.label &&
+          time1[0] == this.datevalue){
+          if(
+            a[0].split(":")[0] >= Number(time1[1].split(':')[0]) && 
+            a[1].split(":")[0] <= Number(time2[1].split(':')[0])
+          ){
+            console.log(a[0].split(":")[0]);
+            console.log(Number(time1[1].split(':')[0]));
+            console.log(a[1].split(":")[0]);
+console.log(Number(time2[1].split(':')[0]));
+              this.details = {
+                department: b[i].item.department,
+                headCount: b[i].item.headCount,
+                leader: b[i].item.leader,
+                meetingTheme: b[i].item.meetingTheme,
+                remark: b[i].item.remark,
+                roomName: b[i].item.roomName,
+                roomUser: b[i].item.roomUser,
+                startTime: b[i].item.startTime,
+                endTime: b[i].item.endTime,
+                remark: b[i].item.remark,
+                mobile: b[i].mobile,
+              };
+              console.log("我进来了");
+              console.log(this.details);
           }
-        } else {
-          this.$message.error(data.msg);
         }
+      }
+      // this.$http({
+      //   url: this.$http.adornUrl("/generator/servicemeeting/atableget"),
+      //   method: "post",
+      //   data: {
+      //     date: this.datevalue,
+      //     starttime: a[0],
+      //     endtime: a[1],
+      //     room: column.label,
+      //   },
+      //   // 设置请求头
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      // }).then(({ data }) => {
+      //   this.details=[];
+      //   if (data && data.code === 0) {
+      //     if (data !== null) {
+      //       //有数据时         
+      //       this.details.push(data.date);
+      //       console.log(data.date);
+      //     } else {
+      //       //无数据时
+      //     }
+      //   } else {
+      //     this.$message.error(data.msg);
+      //   }
+      // });
+    },
+     getChosenList() {
+      this.$http({
+        url: this.$http.adornUrl("/generator/servicemeeting/list"),
+        method: "get",
+        params: this.$http.adornParams({
+          page:1,
+          limit: 10,
+          //key为查询字段
+          key: '',
+        }),
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+           console.log('----------');
+          console.log(data);
+          this.choseList = data.listwithphone;
+          this.choseList.reverse();
+         
+        } else {
+         this.$message.error(data.msg);
+        }
+       
       });
     },
     // addIconClass({ row, column, rowIndex, columnIndex }) {
@@ -267,7 +323,6 @@ export default {
     //     }
     // },
   },
-
   data() {
     return {
       room: [],
@@ -284,6 +339,8 @@ export default {
       timeend: "",
       roomsign: "",
       bechosed: false,
+      choseList: {},
+      sign: true
     };
   },
 };
