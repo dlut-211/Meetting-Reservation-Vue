@@ -88,9 +88,9 @@
                   this.$router.replace({ name: 'generator-user_servicemeeting' })
                 }
                 
-              // } else {
+              } else {
               //   this.getCaptcha()
-              //   this.$message.error(data.msg)
+                this.$message.error(data.msg)
               }
             })
           }
