@@ -82,6 +82,19 @@
       }
     },
     methods: {
+
+      //根据不同用户跳转不同首页
+      jumpHomepage() {
+        // console.log(this.$cookie.get('username'))
+        if(this.$cookie.get('username')=='root') {
+          //管理员跳转到管理员首页（预约记录）
+          this.$router.push({ name: 'generator-servicemeeting' })
+        }else{
+          //教师跳转到教师首页（预约历史）
+          this.$router.push({ name: 'generator-user_servicemeeting' })
+        }
+      },
+
       // 修改密码
       updatePasswordHandle () {
         this.updatePassowrdVisible = true

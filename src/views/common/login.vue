@@ -7,7 +7,7 @@
           <p class="brand-info__intro">renren-fast-vue基于vue、element-ui构建开发，实现renren-fast后台管理前端功能，提供一套更优的前端解决方案。</p>
         </div>
         <div class="login-main">
-          <h3 class="login-title">管理员登录</h3>
+          <h3 class="login-title">教师登录</h3>
           <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" status-icon>
             <el-form-item prop="userName">
               <el-input v-model="dataForm.userName" placeholder="帐号"></el-input>
@@ -15,7 +15,7 @@
             <el-form-item prop="password">
               <el-input v-model="dataForm.password" type="password" placeholder="密码"></el-input>
             </el-form-item>
-            <el-form-item prop="captcha">
+            <!-- <el-form-item prop="captcha">
               <el-row :gutter="20">
                 <el-col :span="14">
                   <el-input v-model="dataForm.captcha" placeholder="验证码">
@@ -25,7 +25,7 @@
                   <img :src="captchaPath" @click="getCaptcha()" alt="">
                 </el-col>
               </el-row>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item>
               <el-button class="login-btn-submit" type="primary" @click="dataFormSubmit()">登录</el-button>
             </el-form-item>
@@ -45,7 +45,7 @@
           userName: '',
           password: '',
           uuid: '',
-          captcha: ''
+          // captcha: ''
         },
         dataRule: {
           userName: [
@@ -54,16 +54,16 @@
           password: [
             { required: true, message: '密码不能为空', trigger: 'blur' }
           ],
-          captcha: [
-            { required: true, message: '验证码不能为空', trigger: 'blur' }
-          ]
+          // captcha: [
+          //   { required: true, message: '验证码不能为空', trigger: 'blur' }
+          // ]
         },
-        captchaPath: ''
+        // captchaPath: ''
       }
     },
-    created () {
-      this.getCaptcha()
-    },
+    // created () {
+    //   this.getCaptcha()
+    // },
     methods: {
       // 提交表单
       dataFormSubmit () {
@@ -76,25 +76,33 @@
                 'username': this.dataForm.userName,
                 'password': this.dataForm.password,
                 'uuid': this.dataForm.uuid,
-                'captcha': this.dataForm.captcha
+                // 'captcha': this.dataForm.captcha
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
                 this.$cookie.set('token', data.token)
-                this.$router.replace({ name: 'home' })
-              } else {
-                this.getCaptcha()
-                this.$message.error(data.msg)
+                this.$cookie.set('username',this.dataForm.userName)
+                if(this.dataForm.userName=="root"){
+                  this.$router.replace({ name: 'generator-servicemeeting' })
+                }else{
+                  this.$router.replace({ name: 'generator-user_servicemeeting' })
+                }
+
               }
+                
+              // } else {
+              //   // this.getCaptcha()
+              //   this.$message.error(data.msg)
+              // }
             })
           }
         })
       },
       // 获取验证码
-      getCaptcha () {
-        this.dataForm.uuid = getUUID()
-        this.captchaPath = this.$http.adornUrl(`/captcha.jpg?uuid=${this.dataForm.uuid}`)
-      }
+      // getCaptcha () {
+      //   this.dataForm.uuid = getUUID()
+      //   this.captchaPath = this.$http.adornUrl(`/captcha.jpg?uuid=${this.dataForm.uuid}`)
+      // }
     }
   }
 </script>
@@ -163,13 +171,13 @@
     .login-title {
       font-size: 16px;
     }
-    .login-captcha {
-      overflow: hidden;
-      > img {
-        width: 100%;
-        cursor: pointer;
-      }
-    }
+    // .login-captcha {
+    //   overflow: hidden;
+    //   > img {
+    //     width: 100%;
+    //     cursor: pointer;
+    //   }
+    // }
     .login-btn-submit {
       width: 100%;
       margin-top: 38px;
