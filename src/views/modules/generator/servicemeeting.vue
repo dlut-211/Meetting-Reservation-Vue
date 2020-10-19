@@ -260,6 +260,7 @@ export default {
         if (data && data.code === 0) {
           console.log(data);
           this.dataList = data.page.list;
+          this.dataList.reverse();
           this.listwithphone = data.listwithphone;
           this.listwithphone.reverse();
           this.dataList.orderId = null;
@@ -297,9 +298,9 @@ export default {
     //详情信息
     detailsClick(id) {
       this.details = [];
-      for (let item of this.dataList) {
-        if (item.orderId == id) {
-          this.details.push(item);
+      for (let aaa of this.listwithphone) {
+        if (aaa.item.orderId == id) {
+          this.details.push(aaa.item);
         }
       }
     },
