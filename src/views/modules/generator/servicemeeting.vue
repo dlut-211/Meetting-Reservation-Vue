@@ -1,6 +1,4 @@
 <template>
-  <!-- fang's servicemeeting.vue
-2020-9-27 15:50 -->
   <div class="mod-config" style="border:0px">
     <el-form
       :inline="true"
@@ -10,8 +8,7 @@
         <el-input
           v-model="dataForm.key"
           placeholder="预约人姓名"
-          clearable
-        ></el-input>
+          clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -20,12 +17,17 @@
           v-if="isAuth('generator:servicemeeting:delete')"
           type="danger"
           @click="deleteHandle()"
-          :disabled="dataListSelections.length <= 0"
-          >批量删除</el-button>
+          :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <!-- <el-button type="primary" plain @click="getCurrentList()">当前记录</el-button>
+        <el-button type="primary" plain>历史记录</el-button> -->
+        <el-radio v-model="radio" label="1" border @change="getCurrentList()">当前记录</el-radio>
+        <el-radio v-model="radio" label="2" border @change="getHistoryList()">历史记录</el-radio>         
       </el-form-item>
     </el-form>
-    <el-table
-      :data="listwithphone"
+    <!-- 当前记录的表格 -->
+    <span v-if="this.radio == 1">
+      <el-table
+      :data="currentList"
       border
       stripe
       sortable
@@ -39,12 +41,6 @@
         align="center"
         width="50">
       </el-table-column>
-      <!-- <el-table-column
-        prop="orderId"
-        header-align="center"
-        align="center"
-        label="唯一标识">
-      </el-table-column> -->
       <el-table-column
         prop="item.department"
         header-align="center"
@@ -69,13 +65,6 @@
         align="center"
         label="联系方式">
       </el-table-column>
-      <!-- <el-table-column
-        prop="roomDate"
-        header-align="center"
-        align="center"
-        label="会议日期"
-        width="100">
-      </el-table-column> -->
       <el-table-column
         prop="item.startTime"
         header-align="center"
@@ -87,51 +76,7 @@
         header-align="center"
         align="center"
         label="结束时间">
-      </el-table-column>
-      <!-- <el-table-column
-        prop="meetingTheme"
-        header-align="center"
-        align="center"
-        label="会议主题"
-        width="150">
-      </el-table-column> -->
-      <!-- <el-table-column
-        prop="leader"
-        header-align="center"
-        align="center"
-        label="参会人员"
-        width="92">
-      </el-table-column>
-      <el-table-column
-        prop="headCount"
-        header-align="center"
-        align="center"
-        label="参会人数">
-      </el-table-column> -->
-      <!-- <el-table-column
-        prop="equipment"
-        header-align="center"
-        align="center"
-        label="设备状态"
-        width="120">
-         <template slot-scope="scope">
-          <span v-if="scope.row.equipment==0">无设备</span>
-          <span v-else-if="scope.row.equipment==1">麦克风</span>
-          <span v-else-if="scope.row.equipment==2">投影仪</span>
-          <span v-else>麦克风，投影仪</span>
-         </template>
-      </el-table-column> -->
-      <!-- <el-table-column
-        prop="remark"
-        header-align="center"
-        align="center"
-        label="备注"
-        width="150">
-        <template slot-scope="scope">
-          <span v-if="scope.row.remark==null">无</span>
-          <span v-else>{{scope.row.remark}}</span>
-        </template>
-      </el-table-column> -->
+      </el-table-column>     
       <el-table-column
         prop="item.status"
         header-align="center"
@@ -183,6 +128,113 @@
         </template>
       </el-table-column>
     </el-table>
+    </span>
+    <!-- 历史记录的表格 -->
+    <span v-else-if="this.radio == 2">
+      <el-table
+      :data="historyList"
+      border
+      stripe
+      sortable
+      v-loading="dataListLoading"
+      @selection-change="selectionChangeHandle"
+      style="width: 100%"
+      height="550">
+      <el-table-column
+        type="selection"
+        header-align="center"
+        align="center"
+        width="50">
+      </el-table-column>
+      <el-table-column
+        prop="item.department"
+        header-align="center"
+        align="center"
+        label="使用单位">
+      </el-table-column>
+      <el-table-column
+        prop="item.roomName"
+        header-align="center"
+        align="center"
+        label="会议室名称">
+      </el-table-column>
+      <el-table-column
+        prop="item.roomUser"
+        header-align="center"
+        align="center"
+        label="预约人">
+      </el-table-column>
+      <el-table-column
+        prop="mobile"
+        header-align="center"
+        align="center"
+        label="联系方式">
+      </el-table-column>
+      <el-table-column
+        prop="item.startTime"
+        header-align="center"
+        align="center"
+        label="开始时间">
+      </el-table-column>
+      <el-table-column
+        prop="item.endTime"
+        header-align="center"
+        align="center"
+        label="结束时间">
+      </el-table-column>     
+      <el-table-column
+        prop="item.status"
+        header-align="center"
+        align="center"
+        label="预约状态">
+        <template slot-scope="scope">
+          <span v-if="scope.row.item.status == 0">已成功</span>
+          <span v-else-if="scope.row.item.status == 1">已取消</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        fixed="right"
+        header-align="center"
+        align="center"
+        width="120"
+        label="操作">
+        <template slot-scope="scope">
+          <el-button
+            type="text"            
+            @click="dialogTableVisible = true;detailsClick(scope.row.item.orderId)">详情
+          </el-button>
+          <el-dialog
+            title="详细信息" 
+            :visible.sync="dialogTableVisible"
+            :append-to-body="true"
+            width="40%"
+            center>
+            <el-table :data="details">
+              <el-table-column
+                prop="meetingTheme"
+                label="会议主题"></el-table-column>
+              <el-table-column prop="leader" label="参会人员"></el-table-column>
+              <el-table-column
+                prop="headCount"
+                label="参会人数"></el-table-column>
+              <el-table-column prop="remark" label="备注">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.remark == null">无</span>
+                  <span v-else>{{ scope.row.remark }}</span>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-dialog>  
+          <!-- <el-button
+            type="text"
+            size="small"
+            @click="deleteHandle(scope.row.item.orderId)">删除
+          </el-button> -->
+        </template>
+      </el-table-column>
+    </el-table>
+    </span>
+    
     <!-- 分页处理 -->
     <el-pagination
       @size-change="sizeChangeHandle"
@@ -204,15 +256,18 @@
 <script>
 import AddOrUpdate from "./servicemeeting-add-or-update";
 export default {
-  data() {
+   data() {
     return {
       dataForm: {
         key: "",
       },
       dataList: [],
-      listwithphone: [],
-      // listwithphone: [],
-      details: [],
+      listwithphone: [],//带有联系方式的数据列表
+      details: [],//“详情”所需字段的数据列表
+      currentList: [],//当前的预约记录
+      historyList: [],//历史预约记录
+      nowTime: {},//系统时间
+      radio: '1',//1表示当前记录，2表示历史记录     
       pageIndex: 1,
       pageSize: 10,
       totalPage: 0,
@@ -255,7 +310,71 @@ export default {
           this.totalPage = 0;
         }
         this.dataListLoading = false;
+        this.getCurrentList();
       });
+    },
+    //获取当前的记录列表
+    getCurrentList() {
+      this.historyList = [];
+      this.getNowTime();//获取系统时间
+      for (let a of this.listwithphone) {
+        if (this.nowTime[0] < a.item.startTime.split("-")[0]) {//系统时间年份比记录时间年份小
+          this.currentList.push(a);
+        } else if (this.nowTime[0] == a.item.startTime.split("-")[0]) {//系统时间年份跟记录时间年份相等
+          if (this.nowTime[1] < Number(a.item.startTime.split("-")[1])) {//系统时间月份比记录时间月份小
+            this.currentList.push(a);
+          } else if (this.nowTime[1] == Number(a.item.startTime.split("-")[1])) {//系统时间月份跟记录时间月份相等
+            if (this.nowTime[2] < Number(a.item.startTime.split("-")[2].split(" ")[0])) {//系统时间日比记录时间日小
+              this.currentList.push(a);
+            } else if (this.nowTime[2] == Number(a.item.startTime.split("-")[2].split(" ")[0])) {//系统时间日跟记录时间日相等
+              if (this.nowTime[3] < Number(a.item.startTime.split(" ")[1].split(":")[0])) {//系统时间小时比记录时间小时小
+                this.currentList.push(a);
+              }
+            }
+          }
+        }
+      }
+    },
+    //获取历史的记录列表
+    getHistoryList() {
+      this.currentList = [];
+      this.getNowTime();//获取系统时间
+      for (let a of this.listwithphone) {
+        if (this.nowTime[0] > a.item.startTime.split("-")[0]) {//系统时间年份比记录时间年份小
+          this.historyList.push(a);
+        } else if (this.nowTime[0] == a.item.startTime.split("-")[0]) {//系统时间年份跟记录时间年份相等
+          if (this.nowTime[1] > Number(a.item.startTime.split("-")[1])) {//系统时间月份比记录时间月份小
+            this.historyList.push(a);
+          } else if (this.nowTime[1] == Number(a.item.startTime.split("-")[1])) {//系统时间月份跟记录时间月份相等
+            if (this.nowTime[2] > Number(a.item.startTime.split("-")[2].split(" ")[0])) {//系统时间日比记录时间日小
+              this.historyList.push(a);
+            } else if (this.nowTime[2] == Number(a.item.startTime.split("-")[2].split(" ")[0])) {//系统时间日跟记录时间日相等
+              if (this.nowTime[3] >= Number(a.item.startTime.split(" ")[1].split(":")[0])) {//系统时间小时比记录时间小时小
+                this.historyList.push(a);
+              }
+            }
+          }
+        }
+      }
+
+    },
+    //详情信息
+    detailsClick(id) {
+      this.details = [];
+      for (let aaa of this.listwithphone) {
+        if (aaa.item.orderId == id) {
+          this.details.push(aaa.item);
+        }
+      }
+    },
+    //获取系统时间
+    getNowTime() {
+      var aDate = new Date();
+      this.nowTime[0] = aDate.getFullYear();
+      this.nowTime[1] = aDate.getMonth() + 1;//月份默认0-11
+      this.nowTime[2] = aDate.getDate();
+      this.nowTime[3] = aDate.getHours();
+      this.nowTime[4] = aDate.getMinutes();
     },
     // 每页数
     sizeChangeHandle(val) {
@@ -278,17 +397,7 @@ export default {
     //   this.$nextTick(() => {
     //     this.$refs.addOrUpdate.init(id)
     //   })
-    // },
-
-    //详情信息
-    detailsClick(id) {
-      this.details = [];
-      for (let aaa of this.listwithphone) {
-        if (aaa.item.orderId == id) {
-          this.details.push(aaa.item);
-        }
-      }
-    },
+    // },    
     // 删除
     deleteHandle(id) {
       var ids = id

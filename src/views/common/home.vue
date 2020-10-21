@@ -10,6 +10,7 @@
           @change="getTanleMsg"
           placeholder="选择日期"
           value-format="yyyy-MM-dd"
+            :picker-options="expireTimeOption"
         >
           <!-- :picker-options="expireTimeOption" -->
         </el-date-picker>
@@ -175,8 +176,6 @@ export default {
           this.choosetable = data.choosetable;
           this.room = data.room;
           this.tableData = data.list;
-
-          console.log();
           this.form = {
             department: data.room[1].roomArea,
             name: data.now_user.email,
@@ -268,6 +267,7 @@ export default {
       var year = now.getFullYear(); //得到年份
       var month = now.getMonth(); //得到月份
       var date = now.getDate(); //得到日期
+      var hour = now.getHours();//得到小时
       month = month + 1;
       month = month.toString().padStart(2, "0");
       date = date.toString().padStart(2, "0");
@@ -289,6 +289,11 @@ export default {
     },
     // 单元格的 style 的回调方法
     cellStyle({ row, column, rowIndex, columnIndex }) {
+      var now = new Date();
+      var year = now.getFullYear(); //得到年份
+      var month = now.getMonth() + 1; //得到月份
+      var date = now.getDate(); //得到日期
+      var hour = now.getHours();//得到小时
       //初始渲染已选择
       for (let i = 0; i < this.choosetable.length; i++) {
         let a = this.choosetable[i].chose.split("_");
@@ -332,7 +337,7 @@ export default {
     },
     clickhandle(row, column, event, cell) {
       let a = row.date.split("-");
-      console.log("点击事件");
+      console.log("点击事件"+row.date);
       // console.log(column);
       for (let i = 0; i < this.room.length; i++)
         if (this.room[i].roomName == column.label)
@@ -447,12 +452,12 @@ export default {
           },
         ],
       },
-      // expireTimeOption: {
-      //   disabledDate(date) {
-      //     // 当天可选：
-      //     return date.getTime() < Date.now() - 24 * 60 * 60 * 1000;
-      //   },
-      // },
+      expireTimeOption: {
+        disabledDate(date) {
+          // 当天可选：
+          return date.getTime() < Date.now() - 24 * 60 * 60 * 1000;
+        },
+      },
     };
   },
 };

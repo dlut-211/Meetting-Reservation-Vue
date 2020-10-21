@@ -15,19 +15,19 @@
         :data="tableData"
         :cell-style="cellStyle"
         border
-        @cell-click="clickhandle"
+        @cell-mouse-enter="clickhandle"
+        @cell-mouse-leave="close"  
       >
         <el-table-column prop="date" width="220"> </el-table-column>
         <el-table-column
           v-for="(item, index) in room"
           :key="index"
-          :label="item.roomName"
-          
+          :label="item.roomName"         
           width="100"
         >
         <!-- 预约详情弹出框 -->
           <template slot-scope="scope">           
-            <el-popover trigger="manual" placement="right" @hide="close" v-model="visible">
+            <el-popover trigger="hover" placement="right" v-model="visible">
               <el-form ref="form" :model="details" label-width="80px">
                 <el-form-item label="使用单位">
                   <el-input v-model="details.department"></el-input>
@@ -65,9 +65,7 @@
                     color: white;
                     line-height: 25px;
                   "
-                
-                  >{{ item.capacity }}</el-button
-                >             
+                  >{{ item.capacity }}</el-button>             
                 <el-button
                   type="text"
                   :class="
@@ -81,8 +79,7 @@
                     margin-right: 10%;
                     color: #686868;
                   "
-              
-                ></el-button>
+                  ></el-button>
               </div>
             </el-popover>
           </template>
@@ -165,10 +162,10 @@ export default {
       // var defaultDate = '2020-09-24';
       this.datevalue = defaultDate;
     },
-
+    //弹出框关闭时置空
     close() {
-      this.details=[];
-
+      this.visible = false;
+      this.details = {};
     },
     resetchose() {
       this.timesign = false;
@@ -224,6 +221,7 @@ export default {
       if (columnIndex != 0)
         return "border-radius: 15px;background-color:rgb(0, 215, 193);padding:0";
     },
+    //判断选中的单元格
     clickhandle(row, column, event, cell) {
       let a = row.date.split("-");//选中的单元格
       let b = this.choseList;//当前页面所有被预约的单元格
@@ -236,27 +234,29 @@ export default {
           if(
             a[0].split(":")[0] >= Number(time1[1].split(':')[0]) && 
             a[1].split(":")[0] <= Number(time2[1].split(':')[0])
-          ){
+          ){ 
             console.log(a[0].split(":")[0]);
             console.log(Number(time1[1].split(':')[0]));
             console.log(a[1].split(":")[0]);
-console.log(Number(time2[1].split(':')[0]));
-              this.details = {
-                department: b[i].item.department,
-                headCount: b[i].item.headCount,
-                leader: b[i].item.leader,
-                meetingTheme: b[i].item.meetingTheme,
-                remark: b[i].item.remark,
-                roomName: b[i].item.roomName,
-                roomUser: b[i].item.roomUser,
-                startTime: b[i].item.startTime,
-                endTime: b[i].item.endTime,
-                remark: b[i].item.remark,
-                mobile: b[i].mobile,
-              };
-              console.log("我进来了");
-              console.log(this.details);
+            console.log(Number(time2[1].split(':')[0]));
+            this.details = {
+              department: b[i].item.department,
+              headCount: b[i].item.headCount,
+              leader: b[i].item.leader,
+              meetingTheme: b[i].item.meetingTheme,
+              remark: b[i].item.remark,
+              roomName: b[i].item.roomName,
+              roomUser: b[i].item.roomUser,
+              startTime: b[i].item.startTime,
+              endTime: b[i].item.endTime,
+              remark: b[i].item.remark,
+              mobile: b[i].mobile,
+            };
+            this.visible = true;
+            console.log("我进来了");
+            console.log(this.details);
           }
+        
         }
       }
       // this.$http({
@@ -326,7 +326,7 @@ console.log(Number(time2[1].split(':')[0]));
   data() {
     return {
       room: [],
-      details: [],
+      details: {},
       roomsize: "",
       tableData: [],
       form: {},
@@ -340,7 +340,8 @@ console.log(Number(time2[1].split(':')[0]));
       roomsign: "",
       bechosed: false,
       choseList: {},
-      sign: true
+      sign: true,
+      visible: false //详情弹出框是否可见
     };
   },
 };
